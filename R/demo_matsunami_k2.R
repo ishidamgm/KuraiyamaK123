@@ -3,7 +3,7 @@
 # k2_林分構造5_utf8.R
 # load("./data/matsunami.RData")
 
-#' Title
+#' demonstration of calculation  and plots of k2 (Matsunami 2022)
 #'
 #' @param FB
 #'

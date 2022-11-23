@@ -2,23 +2,6 @@
 # 2022/11/23
 # k2_林分構造5_utf8.R
 # load("./data/matsunami.RData")
-
-#' Title
-#'
-#' @param FB
-#'
-#' @return
-#' @export
-#'
-#' @examples
-#'
-#' demo_matsunami_k2(FB)
-#'
-#'
-# >>>>> ####
-demo_matsunami_k2 <- function(FB){
-
-
 survey_area <- FB@area ## fin_area_polygon.shp
 d<-FB@drone2
 names(d)
@@ -303,5 +286,5 @@ abline(ans,col="red",lty=2,lwd=2)
 text(30,15,"y =   0.972134 x ")
 text(30,13,"Adjusted R^2:   0.9927  (p<0.001)",cex=0.7)
 
-} # <<<<< ####
+
 
