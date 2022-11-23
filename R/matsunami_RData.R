@@ -50,5 +50,5 @@ if(0){  # *.csv　を使わない場合
 }
 
 
-
+# save(FB,file="./data/matsunam_ForestBiomassFieldDroneLiDar_FB.RData")
 
