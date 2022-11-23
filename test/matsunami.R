@@ -1,54 +1,7 @@
+# matsunami.R
+# 2022/11/23
 # k2_林分構造5_utf8.R
-# 松波さんの最終バージョン　####
-#### k2_林分構造3.R
-###  k2_林分構造2.Rの内容は網羅
-
-# "C:/Users/ishid/Dropbox/00D/00/kuraiyama/k123/k2/matsunami/_matsunami_original/20220126/20220113/k2_林分構造5_utf8.R"
-
-# rm(list=ls())
-
-# setwd() ####
-PD <- getwd()
-setwd("C:/Users/ishid/Dropbox/00D/00/kuraiyama/k123/k2/matsunami/_matsunami_original/20220126/20220113")
-dir()
-
-# setClass() ####
-
-setClass("ForestBiomassFieldDroneLiDar",
-         slot=c(field="data.frame", 　　　#　毎木調査データ
-                drone="data.frame",　　　　# ドローン調査データ
-                drone2="data.frame",     #　　ドローン調査現地確認・修正
-                lidar="data.frame",     #　　Lidar　ForestTools ttops
-                area="numeric"          #    調査面積
-
-                ))
-
-FB <- new("ForestBiomassFieldDroneLiDar")
-
-
-
-FB@field <- read.csv( "k2_maiboku.csv",fileEncoding="shift-jis")
-FB@drone  <- read.csv( "k2_森林資源票ver4_matsunami_area3.csv",fileEncoding="shift-jis")
-FB@drone2 <- read.csv("k2_label_dbh_T.csv",fileEncoding="shift-jis")
-FB@lidar  <- read.csv( "K2_ttops_CrownArea2.csv",fileEncoding="shift-jis")
-
-FB@area <- 8012.621
-FB
-slotNames(FB)
-
-if(0){  # *.csv　を使わない場合
-  # d <- read.csv( paste0(ddir,"k2_label_dbh_T.csv"),fileEncoding="shift-jis")
-  # d3<-read.csv("k2_maiboku.csv",fileEncoding="shift-jis") #names(d3)
-  # d4<-read.csv("k2_森林資源票ver4_matsunami_area3.csv",fileEncoding="shift-jis")
-  # d2 <- read.csv("K2_ttops_CrownArea2.csv")
-  load("matsunami_d_d2_d3_d4.RData")
-  FB@field <- d3
-  FB@drone  <- d4
-  FB@drone2 <- d
-  FB@lidar  <- d2
-}
-
-
+# load("./data/matsunami.RData")
 survey_area <- FB@area ## fin_area_polygon.shp
 d<-FB@drone2
 names(d)
@@ -125,29 +78,7 @@ summary(ans)
 ans<-lm(ca[i]~ba[i]+h0[i])
 summary(ans)			###  R-squared:  0.6518
 
-# 樹冠面積　⇒　胸高直径  #####
-ca2ba       <- function(ca){
-  return(0.0044189*ca)
-}
-ca2ba_broad <- function(ca){
-  return(0.002090*ca)
-}
 
-ca2ba_conif <- function(ca){
-  return(0.0075718*ca)
-}
-
-
-ca2dbh	　　　 <- function(ca){
-  return(2*sqrt(0.0044189*ca/pi)*100)
-}
-
-ca2dbh_broad <- function(ca)2*sqrt(0.002090*ca/pi)*100
-ca2dbh_conif <- function(ca)2*sqrt(0.0075718*ca/pi)*100
-
-ca2dbh(100)
-ca2dbh_broad(100)
-ca2dbh_conif(100)
 
 ####
 par(mfrow=c(2,2))
@@ -163,24 +94,7 @@ hist(dbh_broad ,breaks = seq(10,80,10),xlab="DBH (cm)",main="Estimated from dron
 
 # 収量密度 ####
 a <- survey_area #調査面積  8012.621
-ba2dbh<-function(ba){
-  return(100*2*sqrt(ba/pi))
-}
 
-dbh.points<-function(dbh_){ #dbh_<-ba2dbh(ba)  #ordered
-  dbh_cls<-seq(120,0,-10)
-  dbh_cls_n<-rep(NA,length(dbh_cls))
-  for (i in 1:length(dbh_cls)){dbh_cls_n[i]<-rev(which(dbh_>dbh_cls[i]))[1]}
-  points(nn[dbh_cls_n],vv[dbh_cls_n])
-  text(nn[dbh_cls_n],vv[dbh_cls_n],dbh_cls)
-}
-
-yield_density<-function(v){
-  v<-v[order(-v)]
-  vv<-cumsum(v)*10000/a
-  nn<-1:length(v)*10000/a
-  return(data.frame(n=nn,v=vv))
-}
 
 # 収量密度図　yield_density diagram ####
 
@@ -239,8 +153,8 @@ v_ <- c(v_conif,v_broad)
 ( yd_canopy_drone_針広別 <- yield_density(v_)) # 227 283.303054 766.02678
 
 #### yd_ttops_針広なし
-d2 <- read.csv("K2_ttops_CrownArea2.csv")
-names(d2)
+d2 <- FB@lidar #read.csv("K2_ttops_CrownArea2.csv")
+
 ca2<-d2$CrownArea
 v_tt<-0.5*d2$th*ca2ba(ca2)
 ( yd_ttops_針広なし <- yield_density(v_tt)) # ttops 231 288.295178 570.79614
