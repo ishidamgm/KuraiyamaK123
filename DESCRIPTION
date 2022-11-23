@@ -3,9 +3,9 @@ Type: Package
 Title: estimate forest biomass from drone(UAV) structure-from-motion photogrammetry
 Version: 0.0.1
 Author: Ishida M, Kunugi A
-Maintainer:  Ishida M <ishidam@gifu-u.ac.jp>
+Maintainer: Ishida M <ishidam@gifu-u.ac.jp>
 Description: estimate forest biomass from drone(UAV) structure-from-motion photogrammetry in broadlieved and coniferous forest in Giuf unversity, Kuraiyama forest in central Japan.
-License:  GPL (>= 2)
+License: GPL (>= 2)
 Depends: 
     R (>= 3.6.2),
     shapefiles
@@ -16,4 +16,4 @@ Suggests:
 VignetteBuilder: knitr
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.2
