@@ -5,6 +5,17 @@
 
 # "C:/Users/ishid/Dropbox/00D/00/kuraiyama/k123/k2/matsunami/_matsunami_original/20220126/20220113/k2_林分構造5_utf8.R"
 
+
+
+# fileEncoding="shift-jis"
+# 必要とするデータ・ファイル ####
+
+# d <- read.csv( paste0(ddir,"k2_label_dbh_T.csv"),fileEncoding="shift-jis")
+# d3<-read.csv("k2_maiboku.csv",fileEncoding="shift-jis") #names(d3)
+# d4<-read.csv("k2_森林資源票ver4_matsunami_area3.csv",fileEncoding="shift-jis")
+# d2 <- read.csv("K2_ttops_CrownArea2.csv")
+
+#rm(list=ls())
 PD <- getwd()
 
 setwd("C:/Users/ishid/Dropbox/00D/00/kuraiyama/k123/k2/matsunami/_matsunami_original/20220126/20220113")
@@ -12,18 +23,7 @@ setwd("C:/Users/ishid/Dropbox/00D/00/kuraiyama/k123/k2/matsunami/_matsunami_orig
 dir()
 
 
-# fileEncoding="shift-jis"
-# 必要とするデータ・ファイル
-# "k2_label_dbh_T.csv"
-
-
-# k2_label_dbh_T.csv
-# k2_matsunami_area3.csv
-# k2_森林資源票ver4_matsunami_area2.csv
-# k2_ttops_松波範囲.csv
-
 ## ttopsに針広情報追加　2022/1/9
-#rm(list=ls())
 
 ### 　収量密度図に関連した計算の追加
 
@@ -54,9 +54,7 @@ sp[conif]
 table(sp)
 sp_ba <- aggregate(ba,by=list(sp),sum) #data.frame(sp_ba,table(sp))
 
-########################
-
-#### 図化
+##図化 ####
 plot(x,y)
 hist(dbh)
 hist(h0)
@@ -372,5 +370,5 @@ abline(ans,col="red",lty=2,lwd=2)
 text(30,15,"y =   0.972134 x ")
 text(30,13,"Adjusted R^2:   0.9927  (p<0.001)",cex=0.7)
 
-
+# save(d,d2,d3,d4,file="matsunami_d_d2_d3_d4.RData")
 
