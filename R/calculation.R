@@ -1,5 +1,26 @@
 # calculation.R
 
+#### 多角形の面積を求める関数　
+#' area return a  area from polygon xy coordinates
+#'
+#' @param xy a atrix or data frame of xy coordinates
+#'
+#' @return a vector of polygon area
+#' @export
+#'
+#' @examples
+#' xy<-data.frame(x=c(0,1,2,1),y=c(1,2,1,0))
+#' plot(xy,type="b") ; polygon(xy)
+#' area(xy)
+#'
+area <- function(xy){
+  x <- xy[,1];y <- xy[,2]
+  x2 <- c(x[2:length(x)], x[1])
+  y2 <- c(y[2:length(y)], y[1])
+
+  abs(sum((x2-x)*(y+y2)/2))
+}
+
 # 樹冠面積　⇒　胸高直径  #####
 ca2ba       <- function(ca){
   return(0.0044189*ca)
