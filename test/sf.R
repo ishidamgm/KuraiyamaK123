@@ -13,6 +13,7 @@
 
 # rm(list=ls())
 library(tdyverce)
+library(sf)
 getwd()
 #setwd("../K123_2022")
 dir()
@@ -20,6 +21,9 @@ dir.<-"./tree-point" # dir(dir.)
 k1<-st_read(dir.,"k1_2022")
 k2<-st_read(dir.,"k2_2022")
 k3<-st_read(dir.,"k3_2022")
+K1 <- data.frame(st_coordinates(k1))
+K2 <- data.frame(st_coordinates(k2))
+K3 <- data.frame(st_coordinates(k3))
 
 dir.<-"./crown_polygon" # dir(dir.)
 k1crown<-st_read(dir.,"polygon_k1_2022") # k1crown<-read_sf(dir.,"polygon_k1_2022")
@@ -67,7 +71,12 @@ tapply(d3,d3$L2,list)
 #' x12 <- range(d3$X) ; y12 <- range(d3$Y)
 #' plot(0,type="n",xlim=x12,ylim=y12)
 #' sapply(L,polygon)
+#' points(K1[,c("X","Y")],col="blue")
+#' k1plot_xy<-st_coordinates(k1)
 #'
+#' points(k1ttop[,c("tx","ty")],col="red")
+#' k1plot_xy<-st_coordinates(k1plot)
+#' polygon(k1plot_xy,col=NA,border="red",lwd=3)
 #'
 #'
 dataframe2list <- function(d3,index="L2",col=c("X","Y")){
