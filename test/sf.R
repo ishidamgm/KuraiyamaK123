@@ -12,7 +12,7 @@
 # k1の844削除?　empty
 
 # rm(list=ls())
-library(tdyverce)
+library(tidyverse)
 library(sf)
 
 getwd()
