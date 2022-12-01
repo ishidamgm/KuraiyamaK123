@@ -16,6 +16,7 @@ data frame of shapefile points
 read shapefile points
 }
 \examples{
+#setwd("../tree-point")
 k1<- ReadShapefile_Points("k1_2022")
 k2<-　ReadShapefile_Points("k2_2022_2")
 k3<-  ReadShapefile_Points("k3_2022")

@@ -98,3 +98,43 @@ yield_density<-function(v){
   nn<-1:length(v)*10000/a
   return(data.frame(n=nn,v=vv))
 }
+
+
+# data handling ####
+
+#' return list from dara frame
+#'
+#' @param d3  data frame
+#' @param index characters, name of index  in data frame column
+#' @param col vector of characters, data frame column names to include
+#'
+#' @return list
+#' @export
+#'
+#' @examples
+#' dir.<-"../K123_2022/crown_polygon" # dir(dir.)
+#' k1crown<-read_sf(dir.,"polygon_k1_2022")
+#' plot(k1crown)
+#' plot(k1crown %>% select(樹種))
+#' k1crown$geometry[[1]][[1]]
+#' d<-k1crown
+#' st_dimension(d)
+#' d2<-d[!is.na(st_dimension(d)),]
+#' d3<- as.data.frame(st_coordinates(d2))
+#'L<-dataframe2list(d3,index="L2",col=c("X","Y"))
+#' x12 <- range(d3$X) ; y12 <- range(d3$Y)
+#' plot(0,type="n",xlim=x12,ylim=y12)
+#' sapply(L,polygon)
+#'
+#'
+#'
+dataframe2list <- function(d3,index="L2",col=c("X","Y")){
+  L<-c()
+  unq<-unique(d3[,index])
+  for (i in unq){
+    j<-d3[,index]==i
+    L<-c(L,list(d3[j,col]))
+  }
+  names(L)<-index
+  return(L)
+}

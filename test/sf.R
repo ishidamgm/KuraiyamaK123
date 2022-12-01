@@ -12,9 +12,9 @@
 # k1‚Ì844íœ?@empty
 
 # rm(list=ls())
-
+library(tdyverce)
 getwd()
-#setwd("../K123_2022"
+#setwd("../K123_2022")
 dir()
 dir.<-"./tree-point" # dir(dir.)
 k1<-st_read(dir.,"k1_2022")
@@ -41,10 +41,45 @@ names(k1)
 
 
 
-dir.<-"./crown_polygon" # dir(dir.)
-k1crown<-read_sf(dir.,"polygon_k1_2022")
-plot(k1crown)
-k1crown$geometry[[1]][[1]]
+
+tapply(d3,d3$L2,list)
+
+#' return list from dara frame
+#'
+#' @param d3  data frame
+#' @param index characters, name of index  in data frame column
+#' @param col vector of characters, data frame column names to include
+#'
+#' @return list
+#' @export
+#'
+#' @examples
+#' dir.<-"../K123_2022/crown_polygon" # dir(dir.)
+#' k1crown<-read_sf(dir.,"polygon_k1_2022")
+#' plot(k1crown)
+#' plot(k1crown %>% select(÷í))
+#' k1crown$geometry[[1]][[1]]
+#' d<-k1crown
+#' st_dimension(d)
+#' d2<-d[!is.na(st_dimension(d)),]
+#' d3<- as.data.frame(st_coordinates(d2))
+#'L<-dataframe2list(d3,index="L2",col=c("X","Y"))
+#' x12 <- range(d3$X) ; y12 <- range(d3$Y)
+#' plot(0,type="n",xlim=x12,ylim=y12)
+#' sapply(L,polygon)
+#'
+#'
+#'
+dataframe2list <- function(d3,index="L2",col=c("X","Y")){
+  L<-c()
+  unq<-unique(d3[,index])
+  for (i in unq){
+    j<-d3[,index]==i
+    L<-c(L,list(d3[j,col]))
+  }
+  names(L)<-index
+  return(L)
+}
 
 #' return list of polygons of sf class (st_read), can`t extract by st_coordinate
 #'
@@ -66,13 +101,9 @@ sf_polygon_xy <- function(sf.=k1crown){
   return(pxy)
 }
 
-as.vector(k1crown$geometry)
 
 
-PL[[1]]
-i=1
-plot(sf.$geometry[[40]][[1]],type="l")
-str(sf.$geometry[[5]][[1]])
+
 
 
 
