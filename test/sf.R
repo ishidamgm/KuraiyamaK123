@@ -14,6 +14,7 @@
 # rm(list=ls())
 library(tdyverce)
 library(sf)
+
 getwd()
 #setwd("../K123_2022")
 dir()
@@ -30,7 +31,7 @@ k1crown<-st_read(dir.,"polygon_k1_2022") # k1crown<-read_sf(dir.,"polygon_k1_202
 k2crown<-st_read(dir.,"polygon_k2_2022")
 k3crown<-st_read(dir.,"polygon_k3_2022")
 dir.<-"./clown_plot_outline_polygon" # dir(dir.)
-k1plot<-st_read(dir.,"k1_crown_plot_outlinepolygon")
+k1plot<-st_read(dir.,"k1_crown_plot_outlinepolygon2")
 k2plot<-st_read(dir.,"k2_crown_plot_outlinepolygon")
 k3plot<-st_read(dir.,"k3_crown_plot_outlinepolygon")
 
@@ -42,10 +43,13 @@ k3ttop <- read.csv(paste0(dir.,"k3_ttop.csv"))
 # k123_P L plot, ttop###
 names(k1)
 
-
-
-
-
+xy<-data.frame(st_coordinates(k1plot))
+edit(xy)
+xy<-subset(xy,L1==1)
+names(xy)
+plot(xy[,c("X","Y")],type="b")
+text(xy[,1],xy[,2],1:nrow(xy),col="red",cex=0.5)
+edit(xy)
 tapply(d3,d3$L2,list)
 
 #' return list from dara frame
