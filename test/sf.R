@@ -1,15 +1,15 @@
 #  sf.R
-#@shapefilesw‚Å—ÑŠ¥ƒ|ƒŠƒSƒ“‚ª“Ç‚İ‚ß‚È‚¢B2022/11/30
-#@‚¨‚»‚ç‚­í–¼“™‚É2ƒoƒCƒg•¶šŠÜ‚Ü‚ê‚Ä‚¢‚é‚½‚ß?
-#@sf‚Ìst_read‚Å‚Í“Ç‚ß‚é‚ªCs3ƒNƒ‰ƒX‚ÌƒŠƒ^[ƒ“
-#@Œ»“_‚Åƒ}ƒ‹ƒ`ƒ|ƒŠƒSƒ“‚ÌÀ•Wæ“¾‚ª‚Å‚«‚È‚¢
+#ã€€shapefileswã§æ—å† ãƒãƒªã‚´ãƒ³ãŒèª­ã¿è¾¼ã‚ãªã„ã€‚2022/11/30
+#ã€€ãŠãã‚‰ãç¨®åç­‰ã«2ãƒã‚¤ãƒˆæ–‡å­—å«ã¾ã‚Œã¦ã„ã‚‹ãŸã‚?
+#ã€€sfã®st_readã§ã¯èª­ã‚ã‚‹ãŒï¼Œs3ã‚¯ãƒ©ã‚¹ã®ãƒªã‚¿ãƒ¼ãƒ³
+#ã€€ç¾æ™‚ç‚¹ã§ãƒãƒ«ãƒãƒãƒªã‚´ãƒ³ã®åº§æ¨™å–å¾—ãŒã§ããªã„
 # > st_coordinates(k2crown)
 # Error in (function (..., deparse.level = 1)  :
 #            number of columns of matrices must match (see arg 79)
-# ƒ|ƒCƒ“ƒg‚â1ƒ|ƒŠƒSƒ“‚Ìshp‚Å‚ÍÀ•Wæ“¾‚ª‰Â”\@
-# ŠÖ”©ì@sf_polygon_xy
+# ãƒã‚¤ãƒ³ãƒˆã‚„1ãƒãƒªã‚´ãƒ³ã®shpã§ã¯åº§æ¨™å–å¾—ãŒå¯èƒ½ã€€
+# é–¢æ•°è‡ªä½œã€€sf_polygon_xy
 
-# k1‚Ì844íœ?@empty
+# k1ã®844å‰Šé™¤?ã€€empty
 
 # rm(list=ls())
 library(tdyverce)
@@ -65,7 +65,7 @@ tapply(d3,d3$L2,list)
 #' dir.<-"../K123_2022/crown_polygon" # dir(dir.)
 #' k1crown<-read_sf(dir.,"polygon_k1_2022")
 #' plot(k1crown)
-#' plot(k1crown %>% select(÷í))
+#' plot(k1crown %>% select(æ¨¹ç¨®))
 #' k1crown$geometry[[1]][[1]]
 #' d<-k1crown
 #' st_dimension(d)
@@ -128,7 +128,7 @@ st_coordinates(k1crown[c(-40,-57),])
 st_coordinates(k2crown[1:10,])
 
 plot(sf.)
-plot(k3crown %>% select(÷í))
+plot(k3crown %>% select(æ¨¹ç¨®))
 plot(k3 %>% select(sp), add = TRUE, col = 'red')
 plot(st_centroid(k3crown), add = TRUE, col = 'red')
 plot(k3)
@@ -158,8 +158,8 @@ plot(k1crown[1:10,1], col = 'red', add = TRUE)
 ggplot(ggplot2::stat_sf_coordinates(k1))
 
 par(mfrow=c(1,3))
-plot(k1crown %>% select(÷í))
+plot(k1crown %>% select(æ¨¹ç¨®))
 lines(as.data.frame(k1plot))
 
-plot(k2crown %>% select(÷í))
-plot(k3crown %>% select(÷í))
+plot(k2crown %>% select(æ¨¹ç¨®))
+plot(k3crown %>% select(æ¨¹ç¨®))
