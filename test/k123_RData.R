@@ -40,6 +40,32 @@ d<-k1
 k123<-c(list(k1=d.))
 
 
+###
+d<-k1crown
+plot(d)
+as_Spatial(d[1:10,])
+st_dimension(d)
+st_area(d)
+st_drivers(d)
+st_as_text(d)
+st_bbox(d)
+plot(d)
 
+get_key_pos(d)
+
+plot(d %>%  select("樹種"))
+
+plot(k1[,"sp"],add=T)
+plot(d %>%  select("樹種"),add=T)
+plot(d[c("樹種","ID")])
+
+st_dimension(d)
+d2<-d[c(-40,-57),]
+plot(d2[c("樹種")],reset=F,main="Kuraiyama_K1")
+plot(k1plot, col=NA,border=2,lwd=5,add = TRUE)
+plot(k1, col="red",add = TRUE)
+#plot(st_centroid(st_geometry(d2)), add = TRUE)
+points(k1ttop[,c("tx","ty")], pch=3,col="blue")
+legend(4900,-1755,c("tttop"),pch=3,col="blue")
 
 
