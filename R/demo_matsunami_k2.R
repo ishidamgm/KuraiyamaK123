@@ -3,6 +3,26 @@
 # k2_林分構造5_utf8.R
 # load("./data/matsunami.RData")
 
+
+# plot_test ####
+
+#' plot_test
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' plot_test(1)
+#' plot_test(2)
+#' plot_test(3)
+
+plot_test <- function(i){
+  plot(k123crown[[i]]["height"],reset=F,main=names(k123)[i])
+  plot(k123plot[[i]], col=NA,border=2,lwd=5,add = TRUE)
+  plot(k123[[i]], col="red",add = TRUE)
+  plot(k123ttop[[i]],  pch=3,col="blue",add = TRUE)
+}
+
 #' demonstration of calculation  and plots of k2 (Matsunami 2022)
 #'
 #' @param FB
