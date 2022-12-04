@@ -4,10 +4,10 @@
 
 # rm(list=ls())
 
-getwd()
-setwd("../K123_2022")
-library(sf)
- dir()
+# getwd()
+# setwd("../K123_2022")
+# library(sf)
+#  dir()
 
 
 
