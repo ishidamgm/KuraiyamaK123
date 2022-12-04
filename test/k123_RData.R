@@ -12,8 +12,7 @@ library(sf)
 
 
 # k123_RData ####
-
-#' make k123_RData
+#' return list of  simplified sf object from shape file of every trees points data
 #'
 #' @param d  simple future (sf) object forest stund
 #' @param lbl column name of tree labels
@@ -34,17 +33,17 @@ library(sf)
 #' k2<-st_read(dir.,"k2_2022")
 #' k3<-st_read(dir.,"k3_2022")
 #' names(k1) ; names(k2) ; names(k3) ;
-#' k123 <- list(k1=K123_RData(k1),k2=K123_RData(k2),k3=K123_RData(k3))
+#' k123 <- list(k1=k123_RData(k1),k2=k123_RData(k2),k3=k123_RData(k3))
 #' plot(k123$k1)
 #' plot(k123$k2)
 #' plot(k123$k3)
 #' #save(k123,file="K123.RData")
-K123_RData <- function(d,lbl="label",sp="sp",dbh="dbh",h="h",v="vital"){
+k123_RData <- function(d,lbl="label",sp="sp",dbh="dbh",h="h",v="vital"){
   return(d[,c(lbl,sp,dbh,h,v)])
 }
 
 
-#' make  k123plot.RData
+#' return list of  simplified sf object from shape file of plot outline polygon data
 #'
 #' @param k1crown
 #' @param k2crown
@@ -54,98 +53,114 @@ K123_RData <- function(d,lbl="label",sp="sp",dbh="dbh",h="h",v="vital"){
 #' @export
 #'
 #' @examples
-#' dir.<-"./crown_polygon" # dir(dir.)
-#' k1crown<-st_read(dir.,"polygon_k1_2022")
-#' k2crown<-st_read(dir.,"polygon_k2_2022")
-#' k3crown<-st_read(dir.,"polygon_k3_2022")
-#' K123plot<- K123plot_RData(k1crown,k2crown,k3crown)
+#' dir.<-"./clown_plot_outline_polygon" # dir(dir.)
+#' k1plot<-st_read(dir.,"k1_crown_plot_outlinepolygon")
+#' k2plot<-st_read(dir.,"k2_crown_plot_outlinepolygon")
+#'k3plot<-st_read(dir.,"k3_crown_plot_outlinepolygon")
 #' #k123plot <- list(k1=st_geometry(k1plot),k2=st_geometry(k2plot),k3=st_geometry(k3plot))
 #' par(mfrow=c(1,3));sapply(k123plot,plot)
 #' sapply(k123plot,st_area)
 #'  #save(k123plot,file="K123plot.RData")
-K123plot_RData <- function(k1crown,k2crown,k3crown){
+k123plot_RData <- function(k1crown,k2crown,k3crown){
   k123plot <- list(k1=st_geometry(k1plot),k2=st_geometry(k2plot),k3=st_geometry(k3plot))
   return(k123plot)
 }
 
+# k123ttop_RData ####
+#' return sf object from data frame including x,y, coordinates
+#'
+#' @param t. data frame including x,y, coordinates
+#' @param xc column name of x
+#' @param yc column name of y
+#' @param crs crs code
+#'
+#' @return sf object
+#' @export
+#'
+#' @examples
+#' dir.<-"./ttop/" # dir(dir.)
+#' k1ttop<-read.csv(paste0(dir.,"k1_ttop.csv"))
+#' k2ttop<-read.csv(paste0(dir.,"k2_ttop.csv"))
+#' k3ttop<-read.csv(paste0(dir.,"k3_ttop.csv"))
+#'
+#' k123ttop<-list(
+#'   k1=datafarame2sf(k1ttop),
+#'   k2=datafarame2sf(k2ttop),
+#'   k3=datafarame2sf(k3ttop)
+#' )
+#' par(mfrow=c(1,3))
+#' sapply(k123ttop,plot)
+#' for (i in 1:3)plot(k123ttop[[i]]["th"],reset=F)
+#' # save(k123ttop,file="k123ttop.RData")
+datafarame2sf <- function(t.=k2ttop,xc="tx",yc="ty",crs=6675){
+  nrows<-nrow(t.)
+  geometry = st_sfc(lapply(1:nrows, function(x) st_geometrycollection()))
+  df <- st_sf(t., geometry = geometry,crs=crs)
+  for(i in 1:nrows)st_geometry(df)[i]<-st_point(c(t.[i,xc],t.[i,yc]))
+  return(df)
+  }
 
-# make  k123ttop.RData ####
 
-dir.<-"./ttop/" # dir(dir.)
-k1ttop<-read.csv(paste0(dir.,"k1_ttop.csv"))
-k2ttop<-read.csv(paste0(dir.,"k2_ttop.csv"))
-k3ttop<-read.csv(paste0(dir.,"k3_ttop.csv"))
+# k123clown.RData ####
 
 
-k123ttop_RData <- function(ttop.df=k1ttop){
-  sfc <- st_sfc(st_multipoint(as.matrix(ttop.df[,c("tx","ty")])))
-  tt<-st_sf(data.frame(ttop.df,geom=sfc))
+#' Title
+#'
+#' @param d
+#' @param lbl
+#' @param sp
+#' @param dbh
+#' @param h
+#' @param v
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#'  dir.<-"./crown_polygon" #
+#'  dir(dir.)
+#' k1crown <- st_read(dir.,"polygon_k1_2022")
+#' k2crown <- st_read(dir.,"polygon_k2_2022")
+#' k3crown <- st_read(dir.,"polygon_k3_2022")
+#' k123crown <- list(
+#'    k1=k123crown_RData(d=k1crown,lbl="Label1",sp="樹種",a="Area",h="Height"),
+#'    k2=k123crown_RData(k2crown,lbl="label.i",sp="樹種",a="Area",h="Height"),
+#'    k3=k123crown_RData(k3crown,lbl="Label1",sp="樹種",a="Area",h="Height")
+#'    )
+#'
+#' for(i in 1:3){
+#' plot(K123crown[[i]])
+#' }
+#' # save(k123crown,file="k123crown.Rdata")
+
+
+
+k123crown_RData <- function(d=k1crown,lbl="label",sp="sp",a="Area",h="Height"){
+  d<-d[,c(lbl,sp,a,h)]
+  names(d)[1:4]<-c("label","species","area","height")
+  return(d)
 }
 
-k1
-
-tt<-st_sfc(,crs=st_crs(k1))
-plot(tt)
-,k1ttop$ty)
-st_point(c(0,1))
-
-st_geometry(k1)
-
-st_crs(k1)
-
-# make  k123clown.RData ####
-dir.<-"./clown_plot_outline_polygon" # dir(dir.)
-k1plot<-st_read(dir.,"k1_crown_plot_outlinepolygon")
-k2plot<-st_read(dir.,"k2_crown_plot_outlinepolygon")
-k3plot<-st_read(dir.,"k3_crown_plot_outlinepolygon")
 
 
 
+# plot_test ####
 
-K123plot_RData <- function(d,lbl="label",sp="sp",dbh="dbh",h="h",v="vital"){
-  return(d[,c(lbl,sp,dbh,h,v)])
+#' plot_test
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' plot_test(1)
+#' plot_test(2)
+#' plot_test(3)
+
+plot_test <- function(i){
+  plot(k123crown[[i]]["height"],reset=F,main=names(k123)[i])
+  plot(k123plot[[i]], col=NA,border=2,lwd=5,add = TRUE)
+  plot(k123[[i]], col="red",add = TRUE)
+  plot(k123ttop[[i]],  pch=3,col="blue",add = TRUE)
 }
-
-
-
-####
-names(k1)
-names(k2)
-names(k3)
-#k123<-list(k1=data.frame(label=k1$label,sp=k))
-k123<-c()
-# k1 ####
-d<-k1
-(d.<-data.frame(lbl=d$label,sp=d$sp,dbh=d$dbh,h=d$h,st_coordinates(d)))
-k123<-c(list(k1=d.))
-
-
-###
-d<-k1crown
-plot(d)
-as_Spatial(d[1:10,])
-st_dimension(d)
-st_area(d)
-st_drivers(d)
-st_as_text(d)
-st_bbox(d)
-plot(d)
-
-get_key_pos(d)
-
-plot(d %>%  select("樹種"))
-
-plot(k1[,"sp"],add=T)
-plot(d %>%  select("樹種"),add=T)
-plot(d[c("樹種","ID")])
-
-st_dimension(d)
-d2<-d[c(-40,-57),]
-plot(d2[c("樹種")],reset=F,main="Kuraiyama_K1")
-plot(k1plot, col=NA,border=2,lwd=5,add = TRUE)
-plot(k1, col="red",add = TRUE)
-#plot(st_centroid(st_geometry(d2)), add = TRUE)
-points(k1ttop[,c("tx","ty")], pch=3,col="blue")
-legend(4900,-1755,c("tttop"),pch=3,col="blue")
 
 

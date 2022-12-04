@@ -6,3 +6,5 @@ help(package="kuraiyamaK123")
 d
 d2
 edit(d3)
+
+
