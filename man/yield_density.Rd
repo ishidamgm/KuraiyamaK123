@@ -4,11 +4,24 @@
 \alias{yield_density}
 \title{Title}
 \usage{
-yield_density(v)
+yield_density(v, a)
 }
 \arguments{
-\item{v}{}
+\item{v}{volume of trees}
+
+\item{a}{area of plot}
+}
+\value{
+data frame of yn (number of trees ordered with size , yield of cumulative volume)
 }
 \description{
 Title
+}
+\examples{
+pn <- 1
+d <- k123[[pn]]
+v <- 0.5 * d$dbh * d$h
+st_area(k123plot[[pn]])
+
+yield_density()
 }

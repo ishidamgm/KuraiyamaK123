@@ -67,6 +67,160 @@ ba2dbh<-function(ba){
   return(100*2*sqrt(ba/pi))
 }
 
+# 材積式　####
+
+##ヒノキ材積（岐阜地方：天然生林）####
+#' Japan Rinyacho Zaisekishiki Hinoki
+#'
+#' @param DBH numeric vector of DBH
+#' @param H numeric vector of tree heights
+#'
+#' @return numeric vector of tree trunk volumes
+#' @export
+#'
+#' @examples
+#'
+#' DBH<-10:80
+#' H <- DBH^0.8
+#' hinokiV(DBH,H)
+hinokiV<-function(DBH,H){
+  v<-ifelse((6<=DBH)&(DBH<22),
+         10^(-5+0.70320+1.88715*log10(DBH)+1.04190*log10(H)),
+      ifelse((22<=DBH)&(DBH<32),
+          10^(-5+0.92010+1.77770*log10(DBH)+0.99996*log10(H)),
+      ifelse((32<=DBH)&(DBH<42),
+          10^(-5+0.60072+1.95151*log10(DBH)+1.04225*log10(H)),
+       ifelse(42<=DBH,
+              10^(-5+0.86684+1.74574*log10(DBH)+1.09378*log10(H)),
+            NA))))
+  return(v)
+
+   }
+
+
+##サワラ、ヒバ材積(岐阜地方天然生林）##
+#' Japan Rinyacho Zaisekishiki Sawara, Hiba
+#'
+#' @param DBH numeric vector of DBH
+#' @param H numeric vector of tree heights
+#'
+#' @return numeric vector of tree trunk volumes
+#' @export
+#'
+#' @examples
+#'
+#' DBH<-10:80
+#' H <- DBH^0.8
+#' sawaraV(DBH,H)
+sawaraV<-function(DBH,H){
+ v<- ifelse((6<=DBH)&(DBH<52),
+      10^(-5+0.814062+1.864437*log10(DBH)+0.977728*log10(H)),
+       ifelse(52<=DBH,
+        10^(-5+0.971821+1.784240*log10(DBH)+0.960310*log10(H)),
+                  NA)
+           )
+ return(v)
+}
+
+##スギ材積式（岐阜地方）##
+
+#' Japan Rinyacho Zaisekishiki Sugi (Cryptomeria japonica)
+#'
+#' @param DBH numeric vector of DBH
+#' @param H numeric vector of tree heights
+#'
+#' @return numeric vector of tree trunk volumes
+#' @export
+#'
+#' @examples
+#'
+#' DBH<-10:80
+#' H <- DBH^0.8
+#' sugiV(DBH,H)
+#'
+sugiV<-function(DBH,H){
+  v<-ifelse(0<=DBH & DBH<12,
+         10^(-5+0.770734+1.967735*log10(DBH)+0.874649*log10(H)),
+         ifelse(12<=DBH & DBH<32,
+                10^(-5+0.734778+1.864665*log10(DBH)+1.023757*log10(H)),
+                ifelse(32<=DBH & DBH<42,
+                       10^(-5+0.931815+1.687367*log10(DBH)+1.079349*log10(H)),
+                       ifelse(42<=DBH,
+                              10^(-4+0.076451+1.728859*log10(DBH)+0.927572*log10(H)),NA
+                       ))))
+  return(v)
+}
+
+##モミ等、その他針葉樹材積式（岐阜地方）####
+#' Japan Rinyacho Zaisekishiki other species ex. Abies
+#'
+#' @param DBH numeric vector of DBH
+#' @param H numeric vector of tree heights
+#'
+#' @return numeric vector of tree trunk volumes
+#' @export
+#'
+#' @examples
+#'
+#' DBH<-10:80
+#' H <- DBH^0.8
+#' momiV(DBH,H)
+#'
+momiV<-function(DBH,H){
+ v <-  ifelse((6<=DBH)&(DBH<12),
+         10^(-5+0.905547+1.953184*log10(DBH)+0.784224*log10(H)),
+        ifelse((12<=DBH)&(DBH<22),
+         10^(-5+0.848238+1.922623*log10(DBH)+0.883683*log10(H)),
+         ifelse((22<=DBH)&(DBH<32),
+          10^(-5+0.799349+1.931306*log10(DBH)+0.919360*log10(H)),
+          ifelse((32<=DBH)&(DBH<52),
+           10^(-5+0.807404+1.858442*log10(DBH)+1.000080*log10(H)),
+           ifelse(52<=DBH,
+            10^(-5+0.749519+1.816918*log10(DBH)+1.095799*log10(H)),
+            NA)))))
+   return(v)
+  }
+
+##広葉樹材積量（岐阜地方）##
+#' Japan Rinyacho Zaisekishiki bloadleaved species
+#'
+#' @param DBH numeric vector of DBH
+#' @param H numeric vector of tree heights
+#'
+#' @return numeric vector of tree trunk volumes
+#' @export
+#'
+#' @examples
+#'
+#' DBH<-10:80
+#' H <- DBH^0.8
+#' blV(DBH,H)
+#'
+blV<-function(DBH,H){
+  v<-ifelse(DBH>0 & DBH<12,
+         10^(-5+0.833161+1.852021*log10(DBH)+0.896175*log10(H)),
+         ifelse((12<=DBH)&(DBH<22),
+                10^(-5+0.633925+1.857805*log10(DBH)+1.084483*log10(H)),
+                ifelse((22<=DBH)&(DBH<32),
+                       10^(-5+0.467058+2.048645*log10(DBH)+1.013891*log10(H)),
+                       ifelse((32<=DBH)&(DBH<62),
+                              10^(-5+0.813392+1.846988*log10(DBH)+0.972756*log10(H)),
+                              ifelse(62<=DBH,
+                                     10^(-4+0.214444+1.585865*log10(DBH)+1.025991*log10(H)),NA
+                              )))))
+  return(v)
+}
+
+###########
+
+
+
+
+
+
+
+
+
 # 収量密度図　####
 #' Title
 #'
@@ -86,13 +240,19 @@ dbh.points<-function(dbh_){ #dbh_<-ba2dbh(ba)  #ordered
 
 #' Title
 #'
-#' @param v
-#'
-#' @return
+#' @param v volume of trees
+#' @param a area of plot
+#' @return data frame of yn (number of trees ordered with size , yield of cumulative volume)
 #' @export
 #'
 #' @examples
-yield_density<-function(v){
+#' pn <- 1
+#' d <- k123[[pn]]
+#' v <- 0.5 * d$dbh * d$h
+#' st_area(k123plot[[pn]])
+#'
+#' yield_density()
+yield_density<-function(v,a){
   v<-v[order(-v)]
   vv<-cumsum(v)*10000/a
   nn<-1:length(v)*10000/a
