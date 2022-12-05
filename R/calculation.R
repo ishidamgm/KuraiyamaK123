@@ -82,8 +82,8 @@ ba2dbh<-function(ba){
 #'
 #' DBH<-10:80
 #' H <- DBH^0.8
-#' hinokiV(DBH,H)
-hinokiV<-function(DBH,H){
+#' TrunkVolume_hinoki(DBH,H)
+TrunkVolume_hinoki<-function(DBH,H){
   v<-ifelse((6<=DBH)&(DBH<22),
          10^(-5+0.70320+1.88715*log10(DBH)+1.04190*log10(H)),
       ifelse((22<=DBH)&(DBH<32),
@@ -111,8 +111,8 @@ hinokiV<-function(DBH,H){
 #'
 #' DBH<-10:80
 #' H <- DBH^0.8
-#' sawaraV(DBH,H)
-sawaraV<-function(DBH,H){
+#' TrunkVolume_sawara(DBH,H)
+TrunkVolume_sawara<-function(DBH,H){
  v<- ifelse((6<=DBH)&(DBH<52),
       10^(-5+0.814062+1.864437*log10(DBH)+0.977728*log10(H)),
        ifelse(52<=DBH,
@@ -136,9 +136,9 @@ sawaraV<-function(DBH,H){
 #'
 #' DBH<-10:80
 #' H <- DBH^0.8
-#' sugiV(DBH,H)
+#' TrunkVolume_sugi(DBH,H)
 #'
-sugiV<-function(DBH,H){
+TrunkVolume_sugi<-function(DBH,H){
   v<-ifelse(0<=DBH & DBH<12,
          10^(-5+0.770734+1.967735*log10(DBH)+0.874649*log10(H)),
          ifelse(12<=DBH & DBH<32,
@@ -164,9 +164,9 @@ sugiV<-function(DBH,H){
 #'
 #' DBH<-10:80
 #' H <- DBH^0.8
-#' momiV(DBH,H)
+#' TrunkVolume_momi(DBH,H)
 #'
-momiV<-function(DBH,H){
+TrunkVolume_momi <- function(DBH,H){
  v <-  ifelse((6<=DBH)&(DBH<12),
          10^(-5+0.905547+1.953184*log10(DBH)+0.784224*log10(H)),
         ifelse((12<=DBH)&(DBH<22),
@@ -194,9 +194,9 @@ momiV<-function(DBH,H){
 #'
 #' DBH<-10:80
 #' H <- DBH^0.8
-#' blV(DBH,H)
+#' TrunkVolume_bloardleaved(DBH,H)
 #'
-blV<-function(DBH,H){
+TrunkVolume_bloardleaved<-function(DBH,H){
   v<-ifelse(DBH>0 & DBH<12,
          10^(-5+0.833161+1.852021*log10(DBH)+0.896175*log10(H)),
          ifelse((12<=DBH)&(DBH<22),
@@ -249,9 +249,10 @@ dbh.points<-function(dbh_){ #dbh_<-ba2dbh(ba)  #ordered
 #' pn <- 1
 #' d <- k123[[pn]]
 #' v <- 0.5 * d$dbh * d$h
-#' st_area(k123plot[[pn]])
+#' a<-st_area(k123plot[[pn]])
 #'
-#' yield_density()
+#' yield_density(v,a)
+#'
 yield_density<-function(v,a){
   v<-v[order(-v)]
   vv<-cumsum(v)*10000/a

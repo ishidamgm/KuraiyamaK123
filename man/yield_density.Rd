@@ -21,7 +21,8 @@ Title
 pn <- 1
 d <- k123[[pn]]
 v <- 0.5 * d$dbh * d$h
-st_area(k123plot[[pn]])
+a<-st_area(k123plot[[pn]])
 
-yield_density()
+yield_density(v,a)
+
 }
