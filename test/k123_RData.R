@@ -144,23 +144,47 @@ k123crown_RData <- function(d=k1crown,lbl="label",sp="sp",a="Area",h="Height"){
 
 
 
-# plot_test ####
+# k123_RData_arrange ####
 
-#' plot_test
-#'
-#' @return
-#' @export
-#'
-#' @examples
-#' plot_test(1)
-#' plot_test(2)
-#' plot_test(3)
+tn<-sapply(k123,nrow)
+K <- rbind(k123[[1]],k123[[2]],k123[[3]])
+plt<-rep(1:3,tn[1:3])
+K<-cbind(plt,K)
+K. <- subset(K,dbh>=10 & sp!="不明")
+colnames(K)
+(sp. <- table(K.$sp))
+#write.csv(sp.,"spj_correct.csv")
+(spj<-read.csv("spj_correct2.csv"))
+apg<-read.csv("~/Downloads/種名APG.csv",fileEncoding = "cp932")
+#apg<-data.table::fread("~/Downloads/種名APG.csv",encoding = "cp932")
+names(apg)
+match(spj$spj2,apg$種名)
 
-plot_test <- function(i){
-  plot(k123crown[[i]]["height"],reset=F,main=names(k123)[i])
-  plot(k123plot[[i]], col=NA,border=2,lwd=5,add = TRUE)
-  plot(k123[[i]], col="red",add = TRUE)
-  plot(k123ttop[[i]],  pch=3,col="blue",add = TRUE)
+i <- match(K$sp,spj$spj)
+K$sp<-spj$spj2[i]
+K123_species<-data.frame(table(K$sp))
+names(K123_species)[1]<-"sp"
+i<-match(K123_species$sp,apg$種名)
+ScienceName<-apg$学名[i]
+ID<-apg$ID[i] ; Family<-apg$科名[i] ; Genus<-apg$属名[i]
+
+K123_species<-data.frame(K123_species,ID, Family, Genus,ScienceName)
+
+
+# write.csv(K123_species,"K123_species.csv")
+# save(K123_species,file="../data/K123_species.RData")
+#edit(K123_species)
+# save(K,file="../data/K.RData")
+
+
+mtime_stamp(dir())
+
+
+mtime_stamp <- function(fn){
+  mt <- file.info(fn)$mtime
+  return(gsub("[^0-9]","",mt))
 }
+
+
 
 

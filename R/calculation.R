@@ -211,14 +211,6 @@ TrunkVolume_bloardleaved<-function(DBH,H){
   return(v)
 }
 
-###########
-
-
-
-
-
-
-
 
 
 # 収量密度図　####
@@ -249,9 +241,9 @@ dbh.points<-function(dbh_){ #dbh_<-ba2dbh(ba)  #ordered
 #' pn <- 1
 #' d <- k123[[pn]]
 #' v <- 0.5 * d$dbh * d$h
-#' a<-st_area(k123plot[[pn]])
+#' a<-as.numeric(st_area(k123plot[[pn]]))
 #'
-#' yield_density(v,a)
+#' plot(yield_density(v,a))
 #'
 yield_density<-function(v,a){
   v<-v[order(-v)]
@@ -261,7 +253,7 @@ yield_density<-function(v,a){
 }
 
 
-# data handling ####
+# Data handling ####
 
 #' return list from dara frame
 #'
@@ -299,3 +291,25 @@ dataframe2list <- function(d3,index="L2",col=c("X","Y")){
   names(L)<-index
   return(L)
 }
+
+
+
+
+#' mtime_stamp
+#'
+#' @param fn vector of file names
+#'
+#' @return vector of mtime stamp of files
+#' @export
+#'
+#' @examples
+#' mtime_stamp(dir())
+mtime_stamp <- function(fn){
+  mt <- file.info(fn)$mtime
+  return(gsub("[^0-9]","",mt))
+}
+
+
+
+
+

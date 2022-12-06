@@ -144,25 +144,11 @@ k123crown_RData <- function(d=k1crown,lbl="label",sp="sp",a="Area",h="Height"){
 
 
 
-# plot_test ####
+#
+sp_all <- c(k123[[1]]$sp,k123[[2]]$sp,k123[[3]]$sp)
+unique(sp_all)
+sapply(k123,nrow)
+nrow
 
-#' plot_test
-#'
-#' @return
-#' @export
-#'
-#' @examples
-#' plot_test(1)
-#' plot_test(2)
-#' plot_test(3)
-
-plot_test <- function(i){
-  plot(k123crown[[i]]["height"],reset=F,main=names(k123)[i])
-  plot(k123plot[[i]], col=NA,border=2,lwd=5,add = TRUE)
-  plot(k123[[i]], col="red",add = TRUE)
-  plot(k123ttop[[i]],  pch=3,col="blue",add = TRUE)
-}
-
-
-
-
+K123<-rbind(k123[[1]],k123[[2]],k123[[3]])
+#write.csv(K123,"./test/K123.csv")
