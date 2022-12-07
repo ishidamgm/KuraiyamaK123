@@ -221,7 +221,7 @@ TrunkVolume_momi <- function(DBH,H){
   }
 
 ##広葉樹材積量（岐阜地方）##
-#' Japan Rinyacho Zaisekishiki bloadleaved species
+#' Japan Rinyacho Zaisekishiki broadleaved species
 #'
 #' @param DBH numeric vector of DBH
 #' @param H numeric vector of tree heights
@@ -233,9 +233,9 @@ TrunkVolume_momi <- function(DBH,H){
 #'
 #' DBH<-10:80
 #' H <- DBH^0.8
-#' TrunkVolume_bloardleaved(DBH,H)
+#' TrunkVolume_broardleaved(DBH,H)
 #'
-TrunkVolume_bloardleaved<-function(DBH,H){
+TrunkVolume_broardleaved<-function(DBH,H){
   v<-ifelse(DBH>0 & DBH<12,
          10^(-5+0.833161+1.852021*log10(DBH)+0.896175*log10(H)),
          ifelse((12<=DBH)&(DBH<22),
