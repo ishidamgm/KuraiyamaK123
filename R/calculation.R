@@ -66,6 +66,45 @@ if(0){
 ba2dbh<-function(ba){
   return(100*2*sqrt(ba/pi))
 }
+# 胸高直径―樹高　####
+
+#' conifer tree height estimate from DBH (diameter at brest height)
+#'
+#' @param dbh
+#'
+#' @return tree height
+#' @export
+#'
+#' @examples
+#' dbh <- 1:100
+#' h_conif <- TreeHeight_conif(dbh)
+#'
+#' plot(dbh,h_conif,type="l",xlab="DBH (cm)",ylab="Tree Height (m)")
+TreeHeight_conif<-function(dbh){
+  return(1/(1/(0.4303*(dbh^1.2620))+1/39.4))
+}
+
+
+#' broadleaved tree height estimate from DBH (diameter at brest height)
+#'
+#' @param dbh
+#'
+#' @return tree height
+#' @export
+#'
+#' @examples
+#' dbh <- 1:100
+#' h_broad <- TreeHeight_broad(dbh)
+#' h_conif <- TreeHeight_conif(dbh)
+#'
+#' plot(dbh,h_conif,type="l",xlab="DBH (cm)",ylab="Tree Height (m)")
+#' lines(dbh,h_broad,lty=2,col="green")
+#' legend(0,30,
+#' c("Coniferous tree species","Broadleaved tree species"),
+#' col=c("black","green"),lty=c(1,2))
+TreeHeight_broad<-function(dbh){
+  return(1/(1/(1.4357*(dbh^0.9276))+1/39.9))
+}
 
 # 材積式　####
 

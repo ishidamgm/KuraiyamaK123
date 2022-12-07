@@ -1,3 +1,4 @@
+#https://github.com/ishidamgm/KuraiyamaK123
 library(devtools)
 devtools::install_github("ishidamgm/kuraiyamaK123")
 devtools::install_github("ishidamgm/nenrin")

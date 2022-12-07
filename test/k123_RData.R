@@ -150,9 +150,9 @@ tn<-sapply(k123,nrow)
 K <- rbind(k123[[1]],k123[[2]],k123[[3]])
 plt<-rep(1:3,tn[1:3])
 K<-cbind(plt,K)
-K. <- subset(K,dbh>=10 & sp!="不明")
+K <- subset(K,dbh>=10 & sp!="不明")
 colnames(K)
-(sp. <- table(K.$sp))
+(sp. <- table(K$sp))
 #write.csv(sp.,"spj_correct.csv")
 (spj<-read.csv("spj_correct2.csv"))
 apg<-read.csv("~/Downloads/種名APG.csv",fileEncoding = "cp932")
@@ -174,6 +174,7 @@ K123_species<-data.frame(K123_species,ID, Family, Genus,ScienceName)
 # write.csv(K123_species,"K123_species.csv")
 # save(K123_species,file="../data/K123_species.RData")
 #edit(K123_species)
+
 # save(K,file="../data/K.RData")
 
 
@@ -186,5 +187,6 @@ mtime_stamp <- function(fn){
 }
 
 
+plot(k123crown)
 
 

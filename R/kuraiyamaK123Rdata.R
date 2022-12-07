@@ -152,3 +152,16 @@ nrow
 
 K123<-rbind(k123[[1]],k123[[2]],k123[[3]])
 #write.csv(K123,"./test/K123.csv")
+
+
+# switch ####
+K123_species<-read.csv("./test/K123_species.csv",fileEncoding="shift-jis")
+#save(K123_species,file="./data/K123_species.RData")
+
+match(K$sp,K123_species$sp)
+K123_species$TrunkVolumeFunction
+
+unique(K$sp)
+edit(data.frame(K))
+
+K[is.na(K$sp),]
