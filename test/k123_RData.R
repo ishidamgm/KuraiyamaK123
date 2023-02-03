@@ -178,15 +178,21 @@ K123_species<-data.frame(K123_species,ID, Family, Genus,ScienceName)
 # save(K,file="../data/K.RData")
 
 
-mtime_stamp(dir())
+# k123_site ####
+code <- paste0("k",1:3)
+area <- as.numeric(st_area(k123plot[[pn]]))
+area <- sapply(k123plot,st_area)
+(k123_site <- data.frame(code,area))
+# save(k123_site,file="./data/k123_site.RData")
 
 
-mtime_stamp <- function(fn){
-  mt <- file.info(fn)$mtime
-  return(gsub("[^0-9]","",mt))
+###
+names(K)
+crown_drone<- rep(0,nrow(K))
+h_drone<- rep(0,nrow(K))
+for(ii in 1:3){ #ii<-1
+  i<-match(k123crown[[ii]]$label,K$label) ; i<-i[K$plt[i]==1]
+  crown_drone[i]<-k123crown[[ii]]$area
+  h_drone[i]<-k123crown[[ii]]$height
 }
-
-
-plot(k123crown)
-
 

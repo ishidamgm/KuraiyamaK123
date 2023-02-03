@@ -1,37 +1,203 @@
-#kuraiyamaK123Rdata.R
-library(shapefiles)
-wd<-("C:/Users/ayamo/岐阜大学/山地研ゼミ　2020 - General/功刀さん/K123_2022")
-wd<-("C:/Users/ayamo/岐阜大学/山地研ゼミ　2020 - General/功刀さん/K123_2022")
-wd<-"../K123_2022"
-setwd(wd)
-dir()
+# k123_RData.R
+#C:\Users\ishid\Dropbox\00D\00\kuraiyama\K123_2022\
+# KuraiyamaK123_Qgis.qgz
 
-dir(pattern = ".*.shp")
+# rm(list=ls())
 
-#' read shapefile points
+# getwd()
+# setwd("../K123_2022")
+# library(sf)
+#  dir()
+
+
+
+# k123_RData ####
+#' return list of  simplified sf object from shape file of every trees points data
 #'
-#' @param filename
+#' @param d  simple future (sf) object forest stund
+#' @param lbl column name of tree labels
+#' @param sp  column name of tree species
+#' @param dbh column name of diameter at breast height
+#' @param h   column name of tree height
+#' @param v   column name of vital index
 #'
-#' @return data frame of shapefile points
+#' @return   simple future simplified
 #' @export
 #'
 #' @examples
-#'k1<- ReadShapefile_Points("k1_2022")
-#'k2<-　ReadShapefile_Points("k2_2022_2")
-#'k3<-  ReadShapefile_Points("k3_2022")
-#'k123_points<-list(k1=k1,k2=k2,K3=k3)
-#'save(k123_points,file="k123_points.RData")
-ReadShapefile_Points <-function(filename="k2_2022_2"){
+#' #setwd("../K123_2022")
+#'
+#' dir.<-"./tree-point"
+#' dir(dir.)
+#' k1<-st_read(dir.,"k1_2022")
+#' k2<-st_read(dir.,"k2_2022")
+#' k3<-st_read(dir.,"k3_2022")
+#' names(k1) ; names(k2) ; names(k3) ;
+#' k123 <- list(k1=k123_RData(k1),k2=k123_RData(k2),k3=k123_RData(k3))
+#' plot(k123$k1)
+#' plot(k123$k2)
+#' plot(k123$k3)
+#' #save(k123,file="K123.RData")
+k123_RData <- function(d,lbl="label",sp="sp",dbh="dbh",h="h",v="vital"){
+  return(d[,c(lbl,sp,dbh,h,v)])
+}
 
-  d<-shapefiles::read.shapefile(filename)　
-  shp<-d$shp$shp;
-  dbf<-d$dbf$dbf;	names(dbf)
-  d<-data.frame(dbf,shp)
-  d$sp<-iconv(d$sp, from = "shift-jis", to = "utf8")
+
+#' return list of  simplified sf object from shape file of plot outline polygon data
+#'
+#' @param k1crown
+#' @param k2crown
+#' @param k3crown
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' dir.<-"./clown_plot_outline_polygon" # dir(dir.)
+#' k1plot<-st_read(dir.,"k1_crown_plot_outlinepolygon")
+#' k2plot<-st_read(dir.,"k2_crown_plot_outlinepolygon")
+#'k3plot<-st_read(dir.,"k3_crown_plot_outlinepolygon")
+#' #k123plot <- list(k1=st_geometry(k1plot),k2=st_geometry(k2plot),k3=st_geometry(k3plot))
+#' par(mfrow=c(1,3));sapply(k123plot,plot)
+#' sapply(k123plot,st_area)
+#'  #save(k123plot,file="K123plot.RData")
+k123plot_RData <- function(k1crown,k2crown,k3crown){
+  k123plot <- list(k1=st_geometry(k1plot),k2=st_geometry(k2plot),k3=st_geometry(k3plot))
+  return(k123plot)
+}
+
+# k123ttop_RData ####
+#' return sf object from data frame including x,y, coordinates
+#'
+#' @param t. data frame including x,y, coordinates
+#' @param xc column name of x
+#' @param yc column name of y
+#' @param crs crs code
+#'
+#' @return sf object
+#' @export
+#'
+#' @examples
+#' dir.<-"./ttop/" # dir(dir.)
+#' k1ttop<-read.csv(paste0(dir.,"k1_ttop.csv"))
+#' k2ttop<-read.csv(paste0(dir.,"k2_ttop.csv"))
+#' k3ttop<-read.csv(paste0(dir.,"k3_ttop.csv"))
+#'
+#' k123ttop<-list(
+#'   k1=datafarame2sf(k1ttop),
+#'   k2=datafarame2sf(k2ttop),
+#'   k3=datafarame2sf(k3ttop)
+#' )
+#' par(mfrow=c(1,3))
+#' sapply(k123ttop,plot)
+#' for (i in 1:3)plot(k123ttop[[i]]["th"],reset=F)
+#' # save(k123ttop,file="k123ttop.RData")
+datafarame2sf <- function(t.=k2ttop,xc="tx",yc="ty",crs=6675){
+  nrows<-nrow(t.)
+  geometry = st_sfc(lapply(1:nrows, function(x) st_geometrycollection()))
+  df <- st_sf(t., geometry = geometry,crs=crs)
+  for(i in 1:nrows)st_geometry(df)[i]<-st_point(c(t.[i,xc],t.[i,yc]))
+  return(df)
+}
+
+
+# k123clown.RData ####
+
+
+#' Title
+#'
+#' @param d
+#' @param lbl
+#' @param sp
+#' @param dbh
+#' @param h
+#' @param v
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#'  dir.<-"./crown_polygon" #
+#'  dir(dir.)
+#' k1crown <- st_read(dir.,"polygon_k1_2022")
+#' k2crown <- st_read(dir.,"polygon_k2_2022")
+#' k3crown <- st_read(dir.,"polygon_k3_2022")
+#' k123crown <- list(
+#'    k1=k123crown_RData(d=k1crown,lbl="Label1",sp="樹種",a="Area",h="Height"),
+#'    k2=k123crown_RData(k2crown,lbl="label.i",sp="樹種",a="Area",h="Height"),
+#'    k3=k123crown_RData(k3crown,lbl="Label1",sp="樹種",a="Area",h="Height")
+#'    )
+#'
+#' for(i in 1:3){
+#' plot(K123crown[[i]])
+#' }
+#' # save(k123crown,file="k123crown.Rdata")
+
+
+
+k123crown_RData <- function(d=k1crown,lbl="label",sp="sp",a="Area",h="Height"){
+  d<-d[,c(lbl,sp,a,h)]
+  names(d)[1:4]<-c("label","species","area","height")
   return(d)
 }
 
-edit(d)
 
 
+
+#
+sp_all <- c(k123[[1]]$sp,k123[[2]]$sp,k123[[3]]$sp)
+unique(sp_all)
+sapply(k123,nrow)
+nrow
+
+K123<-rbind(k123[[1]],k123[[2]],k123[[3]])
+#write.csv(K123,"./test/K123.csv")
+
+
+# switch ####
+K123_species<-read.csv("./test/K123_species.csv",fileEncoding="shift-jis")
+#save(K123_species,file="./data/K123_species.RData")
+
+
+
+unique(K$sp)
+edit(data.frame(K))
+
+K.[is.na(K$sp),]
+#
+K.<-subset(K,dbh>=10 & vital>0,!is.na(sp))
+unique(K.$sp)
+K<-K.
+# save(K,file="./data/K.RData")
+# load("./data/K.RData")
+plot(K)
+
+# volume ####
+# 関数式当てはめのための樹種分類 ####
+(i<-match(K$sp,K123_species$sp))
+(Ftyp <- K123_species$TrunkVolumeFunction[i])
+unique(Ftyp)
+
+# 樹高のデータが入っていなかった
+#　小さい木の樹高も推定しないといけないので胸高直径-樹高の関係式を用いる
+#' h_broad <- TreeHeight_broad(dbh)
+#' h_conif <- TreeHeight_conif(dbh)
+h <- as.numeric(K$h)
+i<-is.na(h) & Ftyp!="bl";  h[i] <- TreeHeight_conif(K$dbh[i])
+i<-is.na(h) & Ftyp=="bl";  h[i] <- TreeHeight_broad(K$dbh[i])
+h
+K$h <- h
+# 材積推定　####
+
+names(K)
+v<-rep(0,nrow(K))
+i<-Ftyp=="sugi" ; v[i]<-TrunkVolume_sugi(K$dbh[i],K$h[i])
+i<-Ftyp=="sawara" ; v[i]<-TrunkVolume_sawara(K$dbh[i],K$h[i])
+i<-Ftyp=="hinoki" ; v[i]<-TrunkVolume_hinoki(K$dbh[i],K$h[i])
+i<-Ftyp=="asunaro" ; v[i]<-TrunkVolume_hinoki(K$dbh[i],K$h[i])
+i<-Ftyp=="bl" ; v[i]<-TrunkVolume_broardleaved(K$dbh[i],K$h[i])
+
+K<-cbind(K,v)
+
+# save(K,file="./data/K.RData")
 

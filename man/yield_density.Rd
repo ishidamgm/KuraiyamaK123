@@ -19,10 +19,10 @@ Title
 }
 \examples{
 pn <- 1
-d <- k123[[pn]]
-v <- 0.5 * d$dbh * d$h
-a<-st_area(k123plot[[pn]])
-
-yield_density(v,a)
+d<-subset(K,plt==pn)
+a<-as.numeric(st_area(k123plot[[pn]]))
+plot(yield_density(d$v,a),
+ xlab="N",
+ ylab="Cummulative trunk volume(m^3/ha)")
 
 }

@@ -278,11 +278,11 @@ dbh.points<-function(dbh_){ #dbh_<-ba2dbh(ba)  #ordered
 #'
 #' @examples
 #' pn <- 1
-#' d <- k123[[pn]]
-#' v <- 0.5 * d$dbh * d$h
+#' d<-subset(K,plt==pn)
 #' a<-as.numeric(st_area(k123plot[[pn]]))
-#'
-#' plot(yield_density(v,a))
+#' plot(yield_density(d$v,a),
+#'  xlab="N",
+#'  ylab="Cummulative trunk volume(m^3/ha)")
 #'
 yield_density<-function(v,a){
   v<-v[order(-v)]
