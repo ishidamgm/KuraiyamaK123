@@ -1,0 +1,512 @@
+#'
+#' @return numeric vector of tree trunk volumes
+#' @export
+#'
+#' @examples
+#'
+#' DBH<-10:80
+#' H <- DBH^0.8
+#' TrunkVolume_momi(DBH,H)
+#'
+TrunkVolume_momi <- function(DBH,H){
+v <-  ifelse((6<=DBH)&(DBH<12),
+10^(-5+0.905547+1.953184*log10(DBH)+0.784224*log10(H)),
+ifelse((12<=DBH)&(DBH<22),
+10^(-5+0.848238+1.922623*log10(DBH)+0.883683*log10(H)),
+ifelse((22<=DBH)&(DBH<32),
+10^(-5+0.799349+1.931306*log10(DBH)+0.919360*log10(H)),
+ifelse((32<=DBH)&(DBH<52),
+10^(-5+0.807404+1.858442*log10(DBH)+1.000080*log10(H)),
+ifelse(52<=DBH,
+10^(-5+0.749519+1.816918*log10(DBH)+1.095799*log10(H)),
+NA)))))
+return(v)
+}
+##広葉樹材積量（岐阜地方）##
+#' Japan Rinyacho Zaisekishiki bloadleaved species
+#'
+#' @param DBH numeric vector of DBH
+#' @param H numeric vector of tree heights
+#'
+#' @return numeric vector of tree trunk volumes
+#' @export
+#'
+#' @examples
+#'
+#' DBH<-10:80
+#' H <- DBH^0.8
+#' TrunkVolume_bloardleaved(DBH,H)
+#'
+TrunkVolume_bloardleaved<-function(DBH,H){
+v<-ifelse(DBH>0 & DBH<12,
+10^(-5+0.833161+1.852021*log10(DBH)+0.896175*log10(H)),
+ifelse((12<=DBH)&(DBH<22),
+10^(-5+0.633925+1.857805*log10(DBH)+1.084483*log10(H)),
+ifelse((22<=DBH)&(DBH<32),
+10^(-5+0.467058+2.048645*log10(DBH)+1.013891*log10(H)),
+ifelse((32<=DBH)&(DBH<62),
+10^(-5+0.813392+1.846988*log10(DBH)+0.972756*log10(H)),
+ifelse(62<=DBH,
+10^(-4+0.214444+1.585865*log10(DBH)+1.025991*log10(H)),NA
+)))))
+return(v)
+}
+###########
+# 収量密度図　####
+#' Title
+#'
+#' @param dbh_
+#'
+#' @return
+#' @export
+#'
+#' @examples
+dbh.points<-function(dbh_){ #dbh_<-ba2dbh(ba)  #ordered
+dbh_cls<-seq(120,0,-10)
+dbh_cls_n<-rep(NA,length(dbh_cls))
+for (i in 1:length(dbh_cls)){dbh_cls_n[i]<-rev(which(dbh_>dbh_cls[i]))[1]}
+points(nn[dbh_cls_n],vv[dbh_cls_n])
+text(nn[dbh_cls_n],vv[dbh_cls_n],dbh_cls)
+}
+#' Title
+#'
+#' @param v volume of trees
+#' @param a area of plot
+#' @return data frame of yn (number of trees ordered with size , yield of cumulative volume)
+#' @export
+#'
+#' @examples
+#' pn <- 1
+#' d <- k123[[pn]]
+#' v <- 0.5 * d$dbh * d$h
+#' st_area(k123plot[[pn]])
+#'
+#' yield_density()
+yield_density<-function(v,a){
+v<-v[order(-v)]
+vv<-cumsum(v)*10000/a
+nn<-1:length(v)*10000/a
+return(data.frame(n=nn,v=vv))
+}
+# data handling ####
+#' return list from dara frame
+#'
+#' @param d3  data frame
+#' @param index characters, name of index  in data frame column
+#' @param col vector of characters, data frame column names to include
+#'
+#' @return list
+#' @export
+#'
+#' @examples
+#' dir.<-"../K123_2022/crown_polygon" # dir(dir.)
+#' k1crown<-read_sf(dir.,"polygon_k1_2022")
+#' plot(k1crown)
+#' plot(k1crown %>% select(樹種))
+#' k1crown$geometry[[1]][[1]]
+#' d<-k1crown
+#' st_dimension(d)
+#' d2<-d[!is.na(st_dimension(d)),]
+#' d3<- as.data.frame(st_coordinates(d2))
+#'L<-dataframe2list(d3,index="L2",col=c("X","Y"))
+#' x12 <- range(d3$X) ; y12 <- range(d3$Y)
+#' plot(0,type="n",xlim=x12,ylim=y12)
+#' sapply(L,polygon)
+#'
+#'
+#'
+dataframe2list <- function(d3,index="L2",col=c("X","Y")){
+L<-c()
+unq<-unique(d3[,index])
+for (i in unq){
+j<-d3[,index]==i
+L<-c(L,list(d3[j,col]))
+}
+names(L)<-index
+return(L)
+}
+DBH<-10:80
+H <- DBH^0.8
+TrunkVolume_momi(DBH,H)
+TrunkVolume_bloardleaved(DBH,H)
+pn <- 1
+d <- k123[[pn]]
+v <- 0.5 * d$dbh * d$h
+a<-st_area(k123plot[[pn]])
+yield_density(v,a)
+plot_test(1)
+demo_plot_K123 <- function(i){
+plot(k123crown[[i]]["height"],reset=F,main=names(k123)[i])
+plot(k123plot[[i]], col=NA,border=2,lwd=5,add = TRUE)
+plot(k123[[i]], col="red",add = TRUE)
+plot(k123ttop[[i]],pch=3,col="blue",add = TRUE)
+}
+demo_plot_K123(1)
+demo_plot_K123(2)
+detach("package:kuraiyamaK123", unload = TRUE)
+devtools::install_github("ishidamgm/kuraiyamaK123")
+library(kuraiyamaK123)
+library(KuraiyamaK123)
+detach("package:base", unload = TRUE)
+library(base, lib.loc = "C:/Program Files/R/R-4.2.2/library")
+library(kuraiyamaK123)
+library(kuraiyamaK123)
+help(package="kuraiyamaK123")
+pn <- 1
+d <- k123[[pn]]
+v <- 0.5 * d$dbh * d$h
+a<-st_area(k123plot[[pn]])
+yield_density(v,a)
+plot(yield_density(v,a))
+st_area(k123plot[[pn]])
+a<-i(st_area(k123plot[[pn]]))
+a<-I(st_area(k123plot[[pn]]))
+a
+a<-as.numeric(st_area(k123plot[[pn]]))
+a
+plot(yield_density(v,a))
+d
+sp_all
+#
+sp_all <- c(k123[[1]]$sp,k123[[2]]$sp,k123[[3]]$sp)
+sp_all
+union(sp_all)
+unique(sp_all)
+sapply(k123,nrow)
+sapply(k123,nrow)
+rbind(k123)
+z<-rbind(k123)
+z
+plot(z)
+z<-rbind(k123[[1]],k123[[2]],k123[[3]])
+plot(z)
+K123<-rbind(k123[[1]],k123[[2]],k123[[3]])
+write.csv(K123,"./test/K123.csv"
+write.csv(K123,"./test/K123.csv"
+write.csv(K123,"./test/K123.csv")
+devtools::install_github("ishidamgm/kuraiyamaK123")
+# switch ####
+dir("./test")
+# switch ####
+read.csv("./test/K123_species.csv")
+# switch ####
+read.csv("./test/K123_species.csv",enosrding="sgis")
+# switch ####
+read.csv("./test/K123_species.csv",encording="SJIS")
+# switch ####
+read.csv("./test/K123_species.csv",encording="SIFT-JIS")
+# switch ####
+read.csv("./test/K123_species.csv",encoding="SIFT-JIS")
+# switch ####
+read.csv("./test/K123_species.csv",fileEncoding="shift-jis")
+K123_species
+load("C:/Users/ishid/Dropbox/00D/00/kuraiyama/KuraiyamaK123/data/K123_species.RData")
+K123_species
+# switch ####
+K123_species<-read.csv("./test/K123_species.csv",fileEncoding="shift-jis")
+save("./data/K123_species.RData")
+#
+save(K123_species,file="./data/K123_species.RData")
+K123_species
+match(K$sp,K123_species$TrunkVolumeFunction)
+K
+load("C:/Users/ishid/Dropbox/00D/00/kuraiyama/KuraiyamaK123/data/K.RData")
+match(K$sp,K123_species$TrunkVolumeFunction)
+match(K$sp,K123_species$sp)
+edit(K)
+edit(as.data.frame(K))
+edit(data.frame(K))
+unique(K$sp)
+is.na(K$sp)
+k[is.na(K$sp),]
+K[is.na(K$sp),]
+load("C:/Users/ishid/Dropbox/00D/00/kuraiyama/KuraiyamaK123/data/K.RData")
+tn<-sapply(k123,nrow)
+K <- rbind(k123[[1]],k123[[2]],k123[[3]])
+plt<-rep(1:3,tn[1:3])
+K<-cbind(plt,K)
+K <- subset(K,dbh>=10 & sp!="不明")
+colnames(K)
+(sp. <- table(K$sp))
+apg<-read.csv("~/Downloads/種名APG.csv",fileEncoding = "cp932")
+apg
+K123_species
+plot(K)
+K
+K123
+k123
+plot(k123)
+plot(k123_crown)
+plot(k123crown)
+library(kuraiyamaK123)
+rm(list=ls())
+library(kuraiyamaK123)
+data(package = "kuraiyamaK123")
+dir("C:/Users/ishid/AppData/Local/R/win-library/4.2/kuraiyamaK123/data")
+file.info(f)
+(f<-dir("C:/Users/ishid/AppData/Local/R/win-library/4.2/kuraiyamaK123/data"))
+file.info(f)
+libPaths()
+lib.Paths()
+.libPaths()
+(lP<-.libPaths())
+lP
+paste0(lp[[1]],"/kuraiyamaK123")
+(lP<-.libPaths())
+paste0(lp[[1]],"/kuraiyamaK123")
+paste0(lP[[1]],"/kuraiyamaK123")
+dir(paste0(lP[[1]],"/kuraiyamaK123/data"))
+dir(paste0(.libPaths()[[1]],"/kuraiyamaK123/data"))
+data.dir<-paste0(.libPaths()[[1]],"/kuraiyamaK123/data")
+dir(data.dir)
+file.info(paste0(data.dir,dir(data.dir)))
+# data check ####
+dir000 <- getwd()
+setwd(paste0(.libPaths()[[1]],"/kuraiyamaK123/data/"))
+dir()
+file.info(dir())
+setwd(paste0(.libPaths()[[2]],"/kuraiyamaK123/data/"))
+setwd(paste0(.libPaths()[2],"/kuraiyamaK123/data/"))
+.libPaths()
+setrwd(dir000)
+setwd(dir000)
+load("C:/Users/ishid/Dropbox/00D/00/kuraiyama/KuraiyamaK123/data/K123_species.RData")
+load("C:/Users/ishid/Dropbox/00D/00/kuraiyama/KuraiyamaK123/data/K123.RData")
+load("C:/Users/ishid/Dropbox/00D/00/kuraiyama/KuraiyamaK123/data/k123crown.Rdata")
+load("C:/Users/ishid/Dropbox/00D/00/kuraiyama/KuraiyamaK123/data/K123plot.RData")
+load("C:/Users/ishid/Dropbox/00D/00/kuraiyama/KuraiyamaK123/data/k123ttop.RData")
+load("C:/Users/ishid/Dropbox/00D/00/kuraiyama/KuraiyamaK123/data/matsunam_ForestBiomassFieldDroneLiDar_FB.RData")
+#
+demo_plot_K123
+k123plot
+unique(K$sp)
+load("C:/Users/ishid/Dropbox/00D/00/kuraiyama/KuraiyamaK123/data/K.RData")
+K[is.na(K$sp),]
+#
+K.<-subset(K,dbh>=10)
+unique(K
+.$sp)
+unique(K.$sp)
+K.[is.na(K$sp),]
+#
+K.<-subset(K,dbh>=10 & vital>0,!is.na(sp))
+unique(K.$sp)
+K<-K.
+getwd()
+save(K,file="./data/K.RData")
+plot(K)
+# volume ####
+K123_species
+(i<-match(K$sp,K123_species$sp))
+K123_species$TrunkVolumeFunction[i]
+(Ftyp <- K123_species$TrunkVolumeFunction[i])
+unique(Ftyp)
+names(K)
+v
+v<-rep(0,nrow(K))
+i<-Ftyp=="sugi" ; v[i]<-TrunkVolume_hinoki(K$dbh[i],K$h[i])
+K$dbh[i]
+K$h[i]
+#'
+#' @param dbh
+#'
+#' @return tree height
+#' @export
+#'
+#' @examples
+#' dbh <- 1:100
+#' h_conif <- TreeHeight_conif(dbh)
+#' plot(dbh,h_conif,ylab="Tree Height (m)")
+TreeHeight_conif<-function(dbh){
+return(1/(1/(0.4303*(dbh^1.2620))+1/39.4))
+}
+dbh <- 1:100
+h_conif <- TreeHeight_conif(dbh)
+plot(dbh,h_conif,ylab="Tree Height (m)")
+plot(dbh,h_conif,xlab="DBH (cm)"ylab="Tree Height (m)")
+#' @param dbh
+#'
+#' @return tree height
+#' @export
+#'
+#' @examples
+#' #' dbh <- 1:100
+#' h_conif <- TreeHeight_conif(dbh)
+#'
+#' plot(dbh,h_conif,xlab="DBH (cm)",ylab="Tree Height (m)")
+TreeHeight_broad<-function(dbh){
+return(1/(1/(1.4357*(dbh^0.9276))+1/39.9))
+}
+plot(dbh,h_conif,type="l",xlab="DBH (cm)",ylab="Tree Height (m)")
+h_broad <- TreeHeight_broad(dbh)
+plot(dbh,h_broad,xlab="DBH (cm)",ylab="Tree Height (m)")
+lines(dbh,h_conif,col="green")
+plot(dbh,h_conif,type="l",xlab="DBH (cm)",ylab="Tree Height (m)")
+lines(dbh,h_conif,col="green")
+lines(dbh,h_broad,col="green")
+dbh <- 1:100
+h_broad <- TreeHeight_broad(dbh)
+h_conif <- TreeHeight_conif(dbh)
+plot(dbh,h_conif,type="l",xlab="DBH (cm)",ylab="Tree Height (m)")
+lines(dbh,h_broad,col="green")
+legend(0,30,
+c("Broadleaved tree species","Coniferous tree species"),
+col=c("black","green"),lty=c(1,2))
+dbh <- 1:100
+h_broad <- TreeHeight_broad(dbh)
+h_conif <- TreeHeight_conif(dbh)
+plot(dbh,h_conif,type="l",xlab="DBH (cm)",ylab="Tree Height (m)")
+lines(dbh,h_broad,lty=2,col="green")
+legend(0,30,
+c("Broadleaved tree species","Coniferous tree species"),
+col=c("black","green"),lty=c(1,2))
+plot(dbh,h_conif,type="l",xlab="DBH (cm)",ylab="Tree Height (m)")
+lines(dbh,h_broad,lty=2,col="green")
+legend(0,30,
+c("Coniferous tree species","Broadleaved tree species"),
+col=c("black","green"),lty=c(1,2))
+# 樹高のデータが入っていなかった
+#　小さい木の樹高も推定しないといけないので胸高直径-樹高の関係式を用いる
+#' h_broad <- TreeHeight_broad(dbh)
+#' h_conif <- TreeHeight_conif(dbh)
+i<-is.na(K$h)
+# 樹高のデータが入っていなかった
+#　小さい木の樹高も推定しないといけないので胸高直径-樹高の関係式を用いる
+#' h_broad <- TreeHeight_broad(dbh)
+#' h_conif <- TreeHeight_conif(dbh)
+i<-is.na(K$h) ;  K$h[i] <- h_conif(K$dbh[i])
+# 樹高のデータが入っていなかった
+#　小さい木の樹高も推定しないといけないので胸高直径-樹高の関係式を用いる
+#' h_broad <- TreeHeight_broad(dbh)
+#' h_conif <- TreeHeight_conif(dbh)
+i<-is.na(K$h) ;  K$h[i] <- TreeHeight_conif(K$dbh[i])
+Ftyp=="bl"
+# save(K,file="./data/K.RData")
+# load("./data/K.RData")
+plot(K)
+load("./data/K.RData")
+load("./data/K.RData")
+# 樹高のデータが入っていなかった
+#　小さい木の樹高も推定しないといけないので胸高直径-樹高の関係式を用いる
+#' h_broad <- TreeHeight_broad(dbh)
+#' h_conif <- TreeHeight_conif(dbh)
+i<-is.na(K$h) & Ftyp!="bl";  K$h[i] <- TreeHeight_conif(K$dbh[i])
+i<-is.na(K$h) & Ftyp=="bl";  K$h[i] <- TreeHeight_broad(K$dbh[i])
+# 材積推定　####
+unique(Ftyp)
+i<-Ftyp=="sugi" ; v[i]<-TrunkVolume_hinoki(K$dbh[i],K$h[i])
+K$h[i]
+K$dbh[i]
+K$h
+load("./data/K.RData")
+K$h
+as.numeric(K$h)
+# 樹高のデータが入っていなかった
+#　小さい木の樹高も推定しないといけないので胸高直径-樹高の関係式を用いる
+#' h_broad <- TreeHeight_broad(dbh)
+#' h_conif <- TreeHeight_conif(dbh)
+h <- as.numeric(K$h)
+i<-is.na(K$h) & Ftyp!="bl";  K$h[i] <- TreeHeight_conif(K$dbh[i])
+i<-is.na(K$h) & Ftyp=="bl";  K$h[i] <- TreeHeight_broad(K$dbh[i])
+h
+# 材積推定　####
+unique(Ftyp)
+load("./data/K.RData")
+# 樹高のデータが入っていなかった
+#　小さい木の樹高も推定しないといけないので胸高直径-樹高の関係式を用いる
+#' h_broad <- TreeHeight_broad(dbh)
+#' h_conif <- TreeHeight_conif(dbh)
+h <- as.numeric(K$h)
+h
+i<-is.na(h) & Ftyp!="bl";  h[i] <- TreeHeight_conif(K$dbh[i])
+i<-is.na(h) & Ftyp=="bl";  h[i] <- TreeHeight_broad(K$dbh[i])
+h
+K$h <- h
+v<-rep(0,nrow(K))
+i<-Ftyp=="sugi" ; v[i]<-TrunkVolume_hinoki(K$dbh[i],K$h[i])
+unique(Ftyp)
+i<-Ftyp=="sugi" ; v[i]<-TrunkVolume_sugi(K$dbh[i],K$h[i])
+i<-Ftyp=="sawara" ; v[i]<-TrunkVolume_sawara(K$dbh[i],K$h[i])
+i<-Ftyp=="hinoki" ; v[i]<-TrunkVolume_hinoki(K$dbh[i],K$h[i])
+i<-Ftyp=="asunaro" ; v[i]<-TrunkVolume_hinoki(K$dbh[i],K$h[i])
+i<-Ftyp=="bl" ; v[i]<-TrunkVolume_bloardleaved(K$dbh[i],K$h[i])
+cbind(K,v)
+K<-cbind(K,v)
+save(K,file="./data/K.RData")
+library(kuraiyamaK123)
+K
+names(K)
+subset(K,plt==pn)
+pn <- 1
+subset(K,plt==pn)
+a<-as.numeric(st_area(k123plot[[pn]]))
+a
+plot(yield_density(d$v,a))
+d<-subset(K,plt==pn)
+a<-as.numeric(st_area(k123plot[[pn]]))
+#'
+plot(yield_density(d$v,a))
+plot(yield_density(d$v,a),
+xlab="N",
+ylab=Cummulative trunk volume(m^3/ha)")
+plot(yield_density(d$v,a),
+xlab="N",
+ylab=Cummulative trunk volume(m^3/ha)")
+plot(yield_density(d$v,a),
+xlab="N",
+ylab="Cummulative trunk volume(m^3/ha)")
+plot(k123crown)
+# k123_site ####
+code=paste0("k",1:3)
+data.frame(code)
+sapply(k123plot,st_area)
+area <- sapply(k123plot,st_area)
+data.frame(code area)
+data.frame(code,area)
+k123_site <- data.frame(code,area)
+(k123_site <- data.frame(code,area))
+getwd()
+save(k123_site,file="../data/k123_site.RData")
+save(k123_site,file="./data/k123_site.RData")
+k123_site
+library(kuraiyamaK123)
+K
+k123crown[[1]]
+###
+k123crown[[1]]$label
+###
+match(k123crown[[1]]$label,K$label)
+###
+names(K)
+crown
+crown
+crown <- rep(0,nrow(K))
+k123crown[[2]]
+k123crown[[2]]$label
+k123crown[[3]]$label
+match(k123crown[[2]]$label,K$label)
+match(k123crown[[3]]$label,K$label)
+k123crown[[3]]$label
+i<-match(k123crown[[1]]$label,K$label) ; i<-i[K$plt==1]
+i
+K$plt
+K$plt==1
+i
+i<-match(k123crown[[1]]$label,K$label)
+i
+i<-i[K$plt[i]==1]
+i
+k123crown[[1]]$area
+match(k123crown[[1]]$label,K$label)
+k123crown[[1]]$area
+for(ii in 1:3){
+i<-match(k123crown[[1]]$label,K$label) ; i<-i[K$plt[i]==1]
+crown[i]<-k123crown[[1]]$area
+}
+crown
+ii<-1
+k123crown[[ii]]
+k123crown[[ii]]$height
+k123crown[[2]]$area
+k123crown[[3]]$height
+help(package="kuraiyamaK123")
