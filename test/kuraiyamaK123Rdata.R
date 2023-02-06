@@ -144,60 +144,25 @@ k123crown_RData <- function(d=k1crown,lbl="label",sp="sp",a="Area",h="Height"){
 
 
 
-#
-sp_all <- c(k123[[1]]$sp,k123[[2]]$sp,k123[[3]]$sp)
-unique(sp_all)
-sapply(k123,nrow)
-nrow
+# plot_test ####
 
-K123<-rbind(k123[[1]],k123[[2]],k123[[3]])
-#write.csv(K123,"./test/K123.csv")
+#' plot_test
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' plot_test(1)
+#' plot_test(2)
+#' plot_test(3)
+
+plot_test <- function(i){
+  plot(k123crown[[i]]["height"],reset=F,main=names(k123)[i])
+  plot(k123plot[[i]], col=NA,border=2,lwd=5,add = TRUE)
+  plot(k123[[i]], col="red",add = TRUE)
+  plot(k123ttop[[i]],  pch=3,col="blue",add = TRUE)
+}
 
 
-# switch ####
-K123_species<-read.csv("./test/K123_species.csv",fileEncoding="shift-jis")
-#save(K123_species,file="./data/K123_species.RData")
 
-
-
-unique(K$sp)
-edit(data.frame(K))
-
-K.[is.na(K$sp),]
-#
-K.<-subset(K,dbh>=10 & vital>0,!is.na(sp))
-unique(K.$sp)
-K<-K.
-# save(K,file="./data/K.RData")
-# load("./data/K.RData")
-plot(K)
-
-# volume ####
-# 関数式当てはめのための樹種分類 ####
-(i<-match(K$sp,K123_species$sp))
-(Ftyp <- K123_species$TrunkVolumeFunction[i])
-unique(Ftyp)
-
-# 樹高のデータが入っていなかった
-#　小さい木の樹高も推定しないといけないので胸高直径-樹高の関係式を用いる
-#' h_broad <- TreeHeight_broad(dbh)
-#' h_conif <- TreeHeight_conif(dbh)
-h <- as.numeric(K$h)
-i<-is.na(h) & Ftyp!="bl";  h[i] <- TreeHeight_conif(K$dbh[i])
-i<-is.na(h) & Ftyp=="bl";  h[i] <- TreeHeight_broad(K$dbh[i])
-h
-K$h <- h
-# 材積推定　####
-
-names(K)
-v<-rep(0,nrow(K))
-i<-Ftyp=="sugi" ; v[i]<-TrunkVolume_sugi(K$dbh[i],K$h[i])
-i<-Ftyp=="sawara" ; v[i]<-TrunkVolume_sawara(K$dbh[i],K$h[i])
-i<-Ftyp=="hinoki" ; v[i]<-TrunkVolume_hinoki(K$dbh[i],K$h[i])
-i<-Ftyp=="asunaro" ; v[i]<-TrunkVolume_hinoki(K$dbh[i],K$h[i])
-i<-Ftyp=="bl" ; v[i]<-TrunkVolume_broardleaved(K$dbh[i],K$h[i])
-
-K<-cbind(K,v)
-
-# save(K,file="./data/K.RData")
 

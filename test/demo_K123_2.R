@@ -1,10 +1,9 @@
-# matsunami.R
-# 2022/11/23
-# k2_林分構造5_utf8.R
-# load("./data/matsunami.RData")
+# demo_k123_2.R
+# 2022/11/23 -> 2023/2/5
 
+load("./data/k123crown.RData")
+names(d)
 
-# plot_test ####
 
 #' demo plot k123
 #'
@@ -37,18 +36,35 @@ demo_plot_K123 <- function(i){
 #'
 #'
 # >>>>> ####
-demo_matsunami_k2 <- function(FB){
+
+# K123_species
+# k123 (K123)
+# k123_points
+# k123_site
+# k123crown
+# k123plot (K123plot)
+# k123ttop
 
 
-survey_area <- FB@area ## fin_area_polygon.shp
-d<-FB@drone2
+#demo_k123 <- function(iii=1){
+
+iii <- 1　　# k plot number　set　####
+
+survey_area <- k123_site$area[iii]  ## fin_area_polygon.shp
+d<-k123crown[[iii]]
 names(d)
+d<-subset(d,!is.na(dbh))
+sp0<-d$species　; ca0 <-d$area ; h0 <- d$height ; lbl <- d$label
+lbl_<-k123[[iii]]$label
+lbl_<-gsub("[A-Z]","",lbl_)
 
-table(d$ID)
-sp0<-d$樹種　; dbh <- d$dbh ; ca0 <-d$樹冠面積... ; h0 <- d$樹高.m. ; lbl <- d$label.i
+
+dbh <- d$dbh #dbh[is.na(dbh)]<-39.2
+
 ca <- d$area
 sp<-d$sp
-x <- d$X ; y <-d$Y
+#x <- d$X ; y <-d$Y
+xy<-st_coordinates(d) ; x<-xy[,1];  y <-xy[,2]
 ba <- (dbh/200)^2*pi ## ba00<-ba
 v<-0.5*ba*h0
 
@@ -60,17 +76,19 @@ sp[conif]
 
 table(sp)
 sp_ba <- aggregate(ba,by=list(sp),sum) #data.frame(sp_ba,table(sp))
-
+sp_ba
 ##図化 ####
-plot(x,y)
+par(mfrow=c(1,1))
+plot(x,y,type="l")
 hist(dbh)
 hist(h0)
 plot(ca,ca0) ; abline(coef=c(0,1))
 
 #### dbh-h　関係式
+par(mfrow=c(1,2),mar=c(4,4,4,4))
 i<-conif
-plot(dbh[i],h0[i])
-plot(dbh[!i],h0[!i])
+plot(dbh[i],h0[i],main="Conifer")
+plot(dbh[!i],h0[!i],main="Broad leaved")
 
 #### LiDarとDroneによる算出樹高の比較
 ####　胸高断面積と樹冠面積　全体　針葉樹と広葉樹で違いは?　ca=f(dbh)
@@ -90,25 +108,70 @@ text(30,0.75,"Adjusted R^2:  0.6273 (p<0.001)",cex=0.7)
 
 
 
+#' correlation analysis between basal area and crown area
+#'
+#' @param x numeric vector of crown area
+#' @param y numeric vector of basal area
+#' @param main
+#' @param ylab
+#' @param xlab
+#' @param Fx a value of horizontal position of  text "y = a x"
+#' @param Fy  a value of vertical position of  text "y = a x"
+#' @param Rx a value of horizontal position of  text "Adj. R^2 (P)"
+#' @param Ry a value of vertical position of  text "Adj. R^2 (P)"
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' windows()
+#' par(mfrow=c(1,2))
+#' i<-conif
+#' x<-
+kaiki<-function(x=ca[i],y=ba[i],
+                main="針葉樹",ylab="胸高断面積(m^2)",xlab="樹冠面積(m^2)",
+                Fx=20,Fy=0.3,Rx=20,Ry=0.25){
+  plot(ca[i],ba[i],main=main,ylab=ylab,xlab=xlab)
+  ans<-lm(y~x+0)
+  (sans<-summary(ans))
+  coef<-round(ans$coefficients,5)
+  P<- sans$coefficient[1,4]
+  Pr<-ifelse(P>0.001,paste("P =",P),"P<0.001")
+  r2<-round(sans$adj.r.squared,3)
+
+  abline(ans,col="red",lty=2,lwd=2)
+  text(Fx,Fy,paste("y =",coef,"x" ),col="blue")
+  text(Rx,Ry, paste(" Adj. R^2:",r2,"(",Pr,")"),cex=0.8,col="blue")
+
+}
 #### 針葉樹
 i<-conif
 par(mfrow=c(1,2))
 plot(ca[i],ba[i],main="針葉樹",ylab="胸高断面積(m^2)",xlab="樹冠面積(m^2)")
 #ylab="Crown Area (m^2)",xlab="Basal Area (m^2)"
-ans<-lm(ba[i]~ca[i]+0)
-summary(ans)			###  Adjusted R-squared:  0.8618
+ans<-lm(ba[!i]~ca[!i]+0)
+(sans<-summary(ans))
+coef<-round(ans$coefficients,5)
+P<- sans$coefficient[1,4]
+Pr<-ifelse(P>0.001,paste("P =",P),"P<0.001")
+r2<-round(sans$adj.r.squared,3)
+
 abline(ans,col="red",lty=2,lwd=2)
-text(30,0.8,"y =   0.0075718 x ")
-text(30,0.75,"Adjusted R^2:  0.8618 (p<0.001)",cex=0.7)
+text(30,0.5,paste("y =",coef,"x" ),col="blue")
+text(60,0.47, paste(" Adj. R^2:",r2,"(",Pr,")"),cex=0.8,col="blue")
 
 #### 広葉樹
 plot(ca[!i],ba[!i],main="広葉樹",ylab="胸高断面積(m^2)",xlab="樹冠面積(m^2)")
 ans<-lm(ba[!i]~ca[!i]+0)
-abline(ans,col="red",lty=2,lwd=2)
-text(60,0.35,"y =   0.002090 x ")
-text(60,0.30,"   Adjusted R^2:  0.8902 (p<0.001)",cex=0.8)
+(sans<-summary(ans))
+coef<-round(ans$coefficients,5)
+P<- sans$coefficient[1,4]
+Pr<-ifelse(P>0.001,paste("P =",P),"P<0.001")
+ r2<-round(sans$adj.r.squared,3)
 
-summary(ans)
+abline(ans,col="red",lty=2,lwd=2)
+text(30,0.5,paste("y =",coef,"x" ),col="blue")
+text(60,0.47, paste(" Adj. R^2:",r2,"(",Pr,")"),cex=0.8,col="blue")
 
 
 
@@ -122,13 +185,14 @@ summary(ans)			###  R-squared:  0.6518
 par(mfrow=c(2,2))
 ### 針葉樹
 dbh_conif_ <- ca2dbh_conif(ca[i])
-hist(dbh_conif_,breaks = seq(10,110,10),xlab="DBH (cm)",main="Direct measurement/nconifer")
-hist(dbh[i],breaks = seq(10,110,10),xlab="DBH (cm)",main="Estimated from drone ortho/nconifer")
+hist(dbh_conif_,breaks = seq(0,110,10),xlab="DBH (cm)",main="Direct measurement (conifer)")
+hist(dbh[i],breaks = seq(0,110,10),xlab="DBH (cm)",main="Estimated from drone ortho(conifer)")
 ### 広葉樹
-dbh_broad  <- dbh[!i]
+dbh_broad  <- dbh[!i] # dbh_broad[dbh_broad==100 ] <-39.2 !!!!要修正
 dbh_broad_ <- ca2dbh_broad(ca[!i])
-hist(dbh_broad_,breaks = seq(10,80,10),xlab="DBH (cm)",main="Direct measurement/nbroadleaved")
-hist(dbh_broad ,breaks = seq(10,80,10),xlab="DBH (cm)",main="Estimated from drone ortho/nbroadleaved")
+#summary(dbh_broad_) # hist(dbh_broad_)
+hist(dbh_broad_,breaks = seq(0,110,10),xlab="DBH (cm)",main="Direct measurement (broadleaved")
+hist(dbh_broad ,breaks = seq(0,110,10),xlab="DBH (cm)",main="Estimated from drone ortho/nbroadleaved")
 
 # 収量密度 ####
 a <- survey_area #調査面積  8012.621
@@ -141,6 +205,25 @@ d3<-FB@field  #read.csv("k2_maiboku.csv",fileEncoding="shift-jis") #names(d3)
 dbh3<-d3$dbh ; v3<-d3$v ;ba3 <- d3$ba
 sum(v3)
 (yd_all <- yield_density(v3,a)) #632 788.755639 795.80469	# 532 663.952532 719.24115
+
+
+d3<-data.frame(k123[[iii]])
+names(d3)
+d3<-data.frame()
+# 材積計算　help(package="kuraiyamaK123")
+# na があるという問題
+#　k1については樹高の毎木調査をしているが，その他はない
+#　加藤の式を用いる
+
+
+d3$dbh
+
+d3$h
+#　針広判定
+conif_sp<-c("アスナロ","スギ","サワラ")
+conif<-is.element(sp,conif_sp)
+sp[conif]
+
 
 # 樹冠に到達していたかどうかの情報 ####
 ID_feye <- d$ID[match(d3$label,lbl)]

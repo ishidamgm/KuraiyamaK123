@@ -64,10 +64,10 @@ dir()
   k2plot<-st_read(dir.,"k2_crown_plot_outlinepolygon")
   k3plot<-st_read(dir.,"k3_crown_plot_outlinepolygon")
   k123plot　<-　list(k1=st_geometry(k1plot),k2=st_geometry(k2plot),k3=st_geometry(k3plot))
-  k123plot　<-　list(k1,k2,k3)　 #追加
+  # k123plot　<-　list(k1,k2,k3)　 #追加 !!! mistake+
   par(mfrow=c(1,3));sapply(k123plot,plot) 　#par(mfrow=グラフグラフィックス環境を変更(複数グラフの描画)
   sapply(k123plot,st_area)
- #save(k123plot,file="K123plot.RData")
+ #save(k123plot,file="./data/K123plot.RData")
   k123plot_RData <- function(k1crown,k2crown,k3crown){
    k123plot <- list(k1=st_geometry(k1plot),k2=st_geometry(k2plot),k3=st_geometry(k3plot))
    return(k123plot)
@@ -158,7 +158,7 @@ k123crown_RData <- function(d=k1crown,lbl="label",sp="sp",a="Area",h="Height"){
   for(i in 1:3){
    plot(k123crown[[i]])
   }
-# save(k123crown,file="k123crown.Rdata")
+# save(k123crown,file="k123crown.RData")
 
 
 
