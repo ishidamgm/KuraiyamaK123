@@ -48,10 +48,26 @@ ca2dbh	　　　 <- function(ca){
   return(2*sqrt(0.0044189*ca/pi)*100)
 }
 
+#' Title
+#'
+#' @param ca
+#'
+#' @return
+#' @export
+#'
+#' @examples
 ca2dbh_broad <- function(ca){
   return(2*sqrt(0.002090*ca/pi)*100)
 }
 
+#' Title
+#'
+#' @param ca
+#'
+#' @return
+#' @export
+#'
+#' @examples
 ca2dbh_conif <- function(ca){
   return(2*sqrt(0.0075718*ca/pi)*100)
 }
@@ -63,9 +79,18 @@ if(0){
 
 }
 
+#' Title
+#'
+#' @param ba
+#'
+#' @return
+#' @export
+#'
+#' @examples
 ba2dbh<-function(ba){
   return(100*2*sqrt(ba/pi))
 }
+
 # 胸高直径―樹高　####
 
 #' conifer tree height estimate from DBH (diameter at brest height)
@@ -249,6 +274,28 @@ TrunkVolume_broardleaved<-function(DBH,H){
                               )))))
   return(v)
 }
+
+
+#' calculate tree trunk volume from species,dbh, tree height using with function of Japanese governments
+#'
+#' @param sp  character vector of Japanese species name (Katakana)
+#' @param dbh vector of dbh (cm)
+#' @param h   vector of tree height (m)
+#'
+#' @return    vector of trunk volume
+#' @export
+#'
+#' @examples
+#' TrunkVolume(c("スギ","ヒノキ","ブナ"),c(50,30,80),c(20,15,25))
+TrunkVolume <- function(sp,dbh,h){
+  v=ifelse(sp=="スギ",TrunkVolume_sugi(dbh,h),
+      ifelse(sp=="ヒノキ",TrunkVolume_hinoki(dbh,h),
+        ifelse(sp=="サワラ",TrunkVolume_sawara(dbh,h),
+          ifelse(sp=="アスナロ",TrunkVolume_asunaro(dbh,h),
+              TrunkVolume_broardleaved(dbh,h)))))
+  return(v)
+}
+
 
 
 

@@ -1,8 +1,8 @@
 # demo_k123_2.R
 # 2022/11/23 -> 2023/2/5
 
-load("./data/k123crown.RData")
-names(d)
+#load("./data/k123crown.RData")
+
 
 
 #' demo plot k123
@@ -23,20 +23,9 @@ demo_plot_K123 <- function(i){
   plot(k123ttop[[i]],pch=3,col="blue",add = TRUE)
 }
 
-#' demonstration of calculation  and plots of k2 (Matsunami 2022)
-#'
-#' @param FB
-#'
-#' @return
-#' @export
-#'
-#' @examples
-#'
-#' demo_matsunami_k2(FB)
-#'
-#'
-# >>>>> ####
 
+# >>>>> ####
+# load RData ####
 # K123_species
 # k123 (K123)
 # k123_points
@@ -51,7 +40,9 @@ demo_plot_K123 <- function(i){
 iii <- 1　　# k plot number　set　####
 
 survey_area <- k123_site$area[iii]  ## fin_area_polygon.shp
-d<-k123crown[[iii]]
+d.<-k123crown[[iii]]
+plot(d.)
+d<-data.frame(d.)
 names(d)
 lbl <- d$label ; sp<-d$species ;ca <-d$area ;h <- d$height; dbh <- d$dbh
 ba <- (dbh/200)^2*pi ## ba00<-ba
@@ -60,7 +51,7 @@ v<-0.5*ba*h
 conif_sp<-c("アスナロ","スギ","サワラ")
 conif<-is.element(sp,conif_sp)
 sp[conif]
-
+ca[conif]
 ####　基礎集計
 table(sp)
 (sp_ba <- aggregate(ba,by=list(sp),sum)) #data.frame(sp_ba,table(sp))
@@ -73,8 +64,8 @@ hist(h)
 #### dbh-h　関係式
 par(mfrow=c(1,2),mar=c(4,4,4,4))
 i<-conif
-plot(dbh[i],h0[i],main="Conifer",xlab="胸高直径(cm)",ylab="樹高(m)")
-plot(dbh[!i],h0[!i],main="Broad leaved",xlab="胸高直径(cm)",ylab="樹高(m)")
+plot(dbh[i],h[i],main="Conifer",xlab="胸高直径(cm)",ylab="樹高(m)")
+plot(dbh[!i],h[!i],main="Broad leaved",xlab="胸高直径(cm)",ylab="樹高(m)")
 
 #### LiDarとDroneによる算出樹高の比較
 ####　胸高断面積と樹冠面積　全体　針葉樹と広葉樹で違いは?　ca=f(dbh)
@@ -200,7 +191,7 @@ TreeHeight <- function(sp,dbh){
 }
 
 
-#### 毎木 (全立木　胸高以上) yd_all
+# yd_all 毎木 (全立木　胸高以上)  ####
 plot(k123[[iii]])
 d0<-data.frame(k123[[iii]])   #names(d0)
 d0<-subset(d0,dbh>=10)
@@ -233,27 +224,27 @@ freq<-rbind(table(cut(dbh0[canopy],cls)),table(cut(dbh0[!canopy],cls)))
 #barplot(freq,name=paste0("-",10*(1:11)),xlab="DBH (cm)",ylab="N")
 barplot(freq,name=paste0("-",10*(1:11)),xlab="胸高直径 (cm)",ylab="N")
 #legend(5,150,c("canopy","understory"),pch=c("■","□"))
-legend(5,150,c("林冠木","下層木"),pch=c("■","□"))
+legend(8,50,c("林冠木","下層木"),pch=c("■","□"))
 
 
-#### 毎木 (林冠木) yd_canopy
+# yd_canopy 毎木 (林冠木) ####
 yd_canopy <- yield_density(v0[canopy],a)	    #196 244.614091 670.97851
 
 # !!!!!
-### 張さんオリジナル yd_feye_original
-d4<-FB@drone #read.csv("k2_森林資源票ver4_matsunami_area3.csv",fileEncoding="shift-jis")
-(yd_feye_original <- yield_density(d4$volume2,a))	#267 333.224297 677.73153	#267 333.224297 753.79092
-
-### 張さんオリジナル yd_feye_original 針広なし
-#d4<-read.csv("k2_森林資源票ver4_matsunami_area3.csv")
-(yd_feye_original_ <- yield_density(d4$v_,a))	#267 333.224297 753.79092
-
-
+# ドローンで推定する場合　樹冠面積⇒胸高断面積⇒05*ba*h⇒材積
+# ### 張さんオリジナル yd_feye_original
+(yd_feye_original <- yield_density(v,a))	#267 333.224297 677.73153	#267 333.224297 753.79092
+#
+# ### 張さんオリジナル yd_feye_original 針広なし
+# #d4<-read.csv("k2_森林資源票ver4_matsunami_area3.csv")
+(yd_feye_original_ <- yield_density(v,a))	#267 333.224297 753.79092
+#
+#
 #### ドローン写真からの推定 yd_canopy_drone_針広なし
-ca<-ca[order(-ca)]
+#ca<-ca[order(-ca)]
 ba_drone_all<-ca2ba(ca)
 dbh_drone_all<-ba2dbh(ba_drone_all)
-v__ <- ba_drone_all*h0*0.5
+v__ <- ba_drone_all*h*0.5
 ( yd_canopy_drone_針広なし <- yield_density(v__,a)) # 227 283.303054 622.58981
 
 #### ドローン写真からの推定(針葉樹・広葉樹分けて)
@@ -263,32 +254,29 @@ ba_drone_broad<-ca2ba_broad(ca[!i])
 ba_drone_cb <-c(ba_drone_conif,ba_drone_broad)
 dbh_drone_cb <-ba2dbh(ba_drone_cb)
 
-v_conif <- ba_drone_conif * h0[i]  * 0.5
-v_broad <- ba_drone_broad * h0[!i] * 0.5
+v_conif <- ba_drone_conif * h[i]  * 0.5
+v_broad <- ba_drone_broad * h[!i] * 0.5
 v_ <- c(v_conif,v_broad)
 ( yd_canopy_drone_針広別 <- yield_density(v_,a)) # 227 283.303054 766.02678
 
 #### yd_ttops_針広なし
-d2 <- FB@lidar #read.csv("K2_ttops_CrownArea2.csv")
+#d2 <- FB@lidar #read.csv("K2_ttops_CrownArea2.csv")
 
-ca2<-d2$CrownArea
-v_tt<-0.5*d2$th*ca2ba(ca2)
+ttop<-k123ttop[[iii]]
+plot(ttop)
+names(ttop)
+dt<-data.frame(ttop)[,c("treeID","th","winRadius","tx","ty","z")]
+
+# CrownArea ####
+load("./data/k123ttops_CrownArea.RData")
+ca2<-ttops_CrownArea[[iii]]
+i<-match(dt$treeID,ca2$id)
+dt<-data.frame(dt,ca2[i,])
+head(dt)
+ca2<-dt$CrownArea
+v_tt<-0.5*dt$th*ca2ba(ca2)
 ( yd_ttops_針広なし <- yield_density(v_tt,a)) # ttops 231 288.295178 570.79614
 
-#### yd_ttops_針広別
-j<-match(d2$Id_2,d$ID)
-dd<-data.frame(d2,sp=d$sp[j])
-#edit(dd)
-sp_<-dd$sp
-i<-is.element(sp_,conif_sp)
-
-ca2<-dd$CrownArea
-
-v_tt_conif<-0.5*ca2ba_conif(ca2[i])*d2$th[i]
-v_tt_broad<-0.5*ca2ba_broad(ca2[!i])*d2$th[!i]
-v_tt_na<-0.5*ca2ba_broad(ca2[is.na(i)])*d2$th[is.na(i)]
-v_tt2<-na.omit(c(v_tt_conif,v_tt_broad,v_tt_na))
-(yd_ttops_針広別 <- yield_density(v_tt2,a)) 	# 231 288.295178 776.29935
 
 # 収量密度図 ####
 windows()
@@ -357,51 +345,7 @@ legend(200,300,
 
 
 
-#ttops_vs_drone　### #
-par(mfrow=c(1,2))
-hist(h0);hist(d2$th)
-
-tid<-d2$field_1
-tlbl<-d2$Id_2
 
 
-ttn<-data.frame(table(tlbl))
-lbl<-d$ID
-lbl
-ttops_n<-rep(0,nrow(d))
-ttops_n[match(ttn[,1],lbl)]<-ttn[,2]
 
-ttops_n
-ttops_n_conif <-ttops_n[i]
-ttops_n_broad <-ttops_n[!i]
-sapply(list(ttops_n,ttops_n_conif,ttops_n_broad ),summary)
-
-
-par(mfrow=c(1,3))
-sapply(list(ttops_n,ttops_n_conif,ttops_n_broad ),hist)
-
-# 樹高推定 ####
-
-ttops_h<-rep(0,nrow(d))
-
-for (ii in 1:nrow(d)){
-  x0<-x[ii];y0<-y[ii]
-  j<-which.min((d2$tx-x0)^2+(d2$ty-y0)^2)
-  ttops_h[ii]<-d2$th[j]
-}
-
-d<-data.frame(d,ttops_n,ttops_h)
-##### write.csv(d,"k2_stand_ttops_drone.csv")
-#   Tree Height estimated with LiDar and drone ####
-hist(h0)
-hist(ttops_h)
-plot(h0,ttops_h,xlab="Tree Height estimated with LiDar(m)",ylab="Tree Height estimated with drone ortho (m)")
-ans<-lm(ttops_h~h0+0)
-summary(ans)			###
-cor(ba,ca)	### 0.49
-abline(ans,col="red",lty=2,lwd=2)
-text(30,15,"y =   0.972134 x ")
-text(30,13,"Adjusted R^2:   0.9927  (p<0.001)",cex=0.7)
-
-} # <<<<< ####
 
