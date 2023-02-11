@@ -137,6 +137,7 @@ kaiki<-function(x=ca[i],y=ba[i],
 ####
 par(mfrow=c(2,2))
 ### 針葉樹
+i<-conif
 dbh_conif_ <- ca2dbh_conif(ca[i])
 hist(dbh_conif_,breaks = seq(0,110,10),xlab="DBH (cm)",main="Direct measurement (conifer)")
 hist(dbh[i],breaks = seq(0,110,10),xlab="DBH (cm)",main="Estimated from drone ortho(conifer)")
@@ -230,7 +231,7 @@ legend(8,50,c("林冠木","下層木"),pch=c("■","□"))
 # yd_canopy 毎木 (林冠木) ####
 yd_canopy <- yield_density(v0[canopy],a)	    #196 244.614091 670.97851
 
-# !!!!!
+# drone ####
 # ドローンで推定する場合　樹冠面積⇒胸高断面積⇒05*ba*h⇒材積
 # ### 張さんオリジナル yd_feye_original
 (yd_feye_original <- yield_density(v,a))	#267 333.224297 677.73153	#267 333.224297 753.79092
@@ -240,14 +241,14 @@ yd_canopy <- yield_density(v0[canopy],a)	    #196 244.614091 670.97851
 (yd_feye_original_ <- yield_density(v,a))	#267 333.224297 753.79092
 #
 #
-#### ドローン写真からの推定 yd_canopy_drone_針広なし
+# ドローン写真からの推定 yd_canopy_drone_針広なし ####
 #ca<-ca[order(-ca)]
 ba_drone_all<-ca2ba(ca)
 dbh_drone_all<-ba2dbh(ba_drone_all)
 v__ <- ba_drone_all*h*0.5
 ( yd_canopy_drone_針広なし <- yield_density(v__,a)) # 227 283.303054 622.58981
 
-#### ドローン写真からの推定(針葉樹・広葉樹分けて)
+# ドローン写真からの推定(針葉樹・広葉樹分けて) ####
 i<-conif
 ba_drone_conif<-ca2ba_conif(ca[i])
 ba_drone_broad<-ca2ba_broad(ca[!i])
@@ -267,7 +268,7 @@ plot(ttop)
 names(ttop)
 dt<-data.frame(ttop)[,c("treeID","th","winRadius","tx","ty","z")]
 
-# CrownArea ####
+# ttop_CrownArea ####
 load("./data/k123ttops_CrownArea.RData")
 ca2<-ttops_CrownArea[[iii]]
 i<-match(dt$treeID,ca2$id)
@@ -282,24 +283,23 @@ v_tt<-0.5*dt$th*ca2ba(ca2)
 windows()
 par(mfrow=c(1,1))
 
-plot(yd_all,type="l",lwd=2,xlab="順位 (N/ha)",ylab="積算材積 (m^3/ha)",main="収量密度図",ylim=c(0,800),lty=2)
+plot(yd_all,type="l",lwd=2,xlab="順位 (N/ha)",ylab="積算材積 (m^3/ha)",main=paste("収量密度図 K",iii),ylim=c(0,800),lty=2)
 lines(yd_canopy,col="black",lwd=5)			#### 毎木 (林冠木) yd_canopy
-lines(yd_feye_original,col="magenta",lty=1)		#### 張さんオリジナル yd_feye_original
-lines(yd_feye_original_,col="magenta",lty=2)		#### 張さんオリジナル yd_feye_original 針広なし
+lines(yd_canopy_drone_針広なし,col="magenta",lty=1)		#### drone_針広なし
+lines(yd_canopy_drone_針広別,col="magenta",lty=2)		#### drone_針広別
 lines(yd_ttops_針広なし,col="blue",lty=2)	 	#### ttops (針葉樹・広葉樹分けないで　青線)
 
-legend(150,300,
+legend(300,430,
        c(	"現地毎木調査　(胸高以上)",
           "現地毎木調査 (林冠木)",
           "ドローン写真からの推定(針広区別なし)",
           "ドローン写真からの推定(針広区別あり)",
-          "ドローン写真からの推定(針広区別あり　張さんオリジナル)",
           "LiDAR DSMからの推定　(針広区別なし)",
           "LiDAR DSMからの推定　(針広区別あり)"),
 
        col=c("black","black","red","red","magenta","blue","blue"),
-       lty=c(2,2,2,2,2,2,2),
-       lwd=c(2,2,2,2,2,2,2),cex=0.7
+       lty=c(1,1,1,2,2,2),
+       lwd=c(2,5,2,2,2,2),cex=0.7
 
 )
 
