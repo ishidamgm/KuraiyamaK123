@@ -37,7 +37,7 @@ demo_plot_K123 <- function(i){
 
 #demo_k123 <- function(iii=1){
 
-iii <- 3　　# k plot number　set　####
+iii <- 2　# k plot number　set　####
 
 survey_area <- k123_site$area[iii]  ## fin_area_polygon.shp
 d.<-k123crown[[iii]]
@@ -197,9 +197,11 @@ plot(k123[[iii]])
 d0<-data.frame(k123[[iii]])   #names(d0)
 d0<-subset(d0,dbh>=10)
 lbl0<- d0$label; sp0<-d0$sp ; dbh0<-d0$dbh ;h0<-d0$h
-dbh0[is.na(dbh0)]<-9 ;h0[is.na(h0)]<-0 #### !!! 暫定入力
-ba0<-pi*(dbh0/200)^2
-i<-h0==0 ; h0[i]<-TreeHeight(sp0[i],dbh0[i])
+#dbh0[is.na(dbh0)]<-9 ;h0[is.na(h0)]<-0 #### !!! 暫定入力
+ba0<-pi*(dbh0/200)^2 ;sum(ba)
+#i<-h0==0 ; h0[i]<-TreeHeight(sp0[i],dbh0[i])
+h0<-TreeHeight(sp0,dbh0)
+h0<-sd.numeric(h0)
 v0<-TrunkVolume(sp0,dbh0,h0)
 (yd_all <- yield_density(v0,a)) #632 788.755639 795.80469	# 532 663.952532 719.24115
 
@@ -249,7 +251,7 @@ v__ <- ba_drone_all*h*0.5
 ( yd_canopy_drone_針広なし <- yield_density(v__,a)) # 227 283.303054 622.58981
 
 # ドローン写真からの推定(針葉樹・広葉樹分けて) ####
-i<-conif
+i<-conif #d$sp[i]
 ba_drone_conif<-ca2ba_conif(ca[i])
 ba_drone_broad<-ca2ba_broad(ca[!i])
 ba_drone_cb <-c(ba_drone_conif,ba_drone_broad)

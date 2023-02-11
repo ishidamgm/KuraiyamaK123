@@ -21,14 +21,87 @@ area <- function(xy){
   abs(sum((x2-x)*(y+y2)/2))
 }
 
+#' correlation analysis between basal area and crown area
+#'
+#' @param x numeric vector of crown area
+#' @param y numeric vector of basal area
+#' @param main
+#' @param ylab
+#' @param xlab
+#' @param Fx a value of horizontal position of  text "y = a x"
+#' @param Fy  a value of vertical position of  text "y = a x"
+#' @param Rx a value of horizontal position of  text "Adj. R^2 (P)"
+#' @param Ry a value of vertical position of  text "Adj. R^2 (P)"
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' windows()
+#' par(mfrow=c(1,3))
+#' #針葉樹
+#' i<-conif
+#' kaiki(x=ca[i],y=ba[i],main="針葉樹",ylab="胸高断面積(m^2)",xlab="樹冠面積(m^2)",
+#' Fx=20,Fy=0.3,Rx=20,Ry=0.25)
+#' #広葉樹
+#' i<-!conif
+#' kaiki(x=ca[i],y=ba[i],main="広葉樹",ylab="胸高断面積(m^2)",xlab="樹冠面積(m^2)",
+#' Fx=40,Fy=0.65,Rx=50,Ry=0.6)
+#' #全体
+#' kaiki(x=ca,y=ba,main="全種",ylab="胸高断面積(m^2)",xlab="樹冠面積(m^2)",
+#' Fx=40,Fy=0.65,Rx=50,Ry=0.6)
+
+kaiki<-function(x=ca[i],y=ba[i],
+                main="針葉樹",ylab="胸高断面積(m^2)",xlab="樹冠面積(m^2)",
+                Fx=20,Fy=0.3,Rx=20,Ry=0.25){
+  plot(ca[i],ba[i],main=main,ylab=ylab,xlab=xlab)
+  ans<-lm(y~x+0)
+  (sans<-summary(ans))
+  coef<-round(ans$coefficients,5)
+  P<- sans$coefficient[1,4]
+  Pr<-ifelse(P>0.001,paste("P =",P),"P<0.001")
+  r2<-round(sans$adj.r.squared,3)
+
+  abline(ans,col="red",lty=2,lwd=2)
+  text(Fx,Fy,paste("y =",coef,"x" ),col="blue")
+  text(Rx,Ry, paste(" Adj. R^2:",r2,"(",Pr,")"),cex=0.8,col="blue")
+
+}
+
 # 樹冠面積　⇒　胸高直径  #####
+#' Title
+#'
+#' @param ca
+#'
+#' @return
+#' @export
+#'
+#' @examples
 ca2ba       <- function(ca){
   return(0.0044189*ca)
 }
+
+#' Title
+#'
+#' @param ca
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#'
 ca2ba_broad <- function(ca){
   return(0.002090*ca)
 }
 
+#' Title
+#'
+#' @param ca
+#'
+#' @return
+#' @export
+#'
+#' @examples
 ca2ba_conif <- function(ca){
   return(0.0075718*ca)
 }

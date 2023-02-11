@@ -183,14 +183,15 @@ for (i in 1:3)plot(k123ttop[[i]]["th"],reset=F)
   (sp. <- table(K$sp))
 
   #write.csv(sp.,"spj_correct3.csv")
-  (spj<-read.csv("./test/spj_correct2.csv",fileEncoding = "cp932"))
+  (spj<-read.csv("./test/spj_correct3.csv",fileEncoding = "cp932"))
 
   apg<-read.csv("../k123_2022/種名APG.csv",fileEncoding = "cp932")
   #apg<-data.table::fread("~/Downloads/種名APG.csv",encoding = "cp932")
   names(apg)
   match(spj$spj2,apg$種名)
 
-  i <- match(K$sp,spj$spj)
+  i <- match(K$sp,spj$spj1) #;K$sp[is.na(i)]
+
   K$sp<-spj$spj2[i]
   K123_species<-data.frame(table(K$sp))
   names(K123_species)[1]<-"sp"
@@ -206,11 +207,13 @@ for (i in 1:3)plot(k123ttop[[i]]["th"],reset=F)
 #edit(K123_species)
 # save(K,file="K.RData")
 
-  # k123<-list(k1=subset(K,plt==1)[,-1],
-  #            k2=subset(K,plt==2)[,-1],
-  #            k3=subset(K,plt==3)[,-1]
-  # )
-  # save(k123,file="./data/K123.RData")
+  k123<-list(k1=subset(K,plt==1)[,-1],
+             k2=subset(K,plt==2)[,-1],
+             k3=subset(K,plt==3)[,-1]
+  )
+  str(k123)
+  plot(k123[[1]])
+  # save(k123,file="./test/K123.RData")
 
   data.frame(k123[[2]])
 
