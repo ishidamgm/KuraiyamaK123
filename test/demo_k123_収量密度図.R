@@ -3,19 +3,13 @@
 
 
 # >>>>> ####
-# load RData ####
-# K123_species
-# k123 (K123)
-# k123_points
-# k123_site
-# k123crown
-# k123plot (K123plot)
-# k123ttop
+# load RData # K123_species　# k123 (K123)　# k123_points
+# k123_site　# k123crown　# k123plot (K123plot)　# k123ttop
 
 
 #demo_k123 <- function(iii=1){
 
-iii <- 3　　# k plot number　set　####
+iii <- 2　　# k plot number　set　!!!!　####
 
 survey_area <- k123_site$area[iii]  ## fin_area_polygon.shp
 d.<-k123crown[[iii]]
@@ -23,6 +17,7 @@ plot(d.)
 d<-data.frame(d.)
 names(d)
 lbl <- d$label ; sp<-d$species ;ca <-d$area ;h <- d$height; dbh <- d$dbh
+if(iii==1){h[137]<-15;h[138]<-10}  #!!!! 適当なデータをとりあえずいれている　####
 if(iii==2){h[366]<-15;h[367]<-10}  #!!!! 適当なデータをとりあえずいれている　####
 if(iii==3){h[is.na(h)]<-10}  #!!!! 適当なデータをとりあえずいれている　####
 ba <- (dbh/200)^2*pi ## ba00<-ba
@@ -61,26 +56,6 @@ cor(ba,ca)	### 0.49
 abline(ans,col="red",lty=2,lwd=2)
 text(30,0.8,"y =   0.0044189 x ")
 text(30,0.75,"Adjusted R^2:  0.6273 (p<0.001)",cex=0.7)
-
-
-kaiki<-function(x=ca[i],y=ba[i],
-                main="針葉樹",ylab="胸高断面積(m^2)",xlab="樹冠面積(m^2)",
-                Fx=20,Fy=0.3,Rx=20,Ry=0.25){
-  plot(ca[i],ba[i],main=main,ylab=ylab,xlab=xlab)
-  ans<-lm(y~x+0)
-  (sans<-summary(ans))
-  coef<-round(ans$coefficients,5)
-  P<- sans$coefficient[1,4]
-  Pr<-ifelse(P>0.001,paste("P =",P),"P<0.001")
-  r2<-round(sans$adj.r.squared,3)
-
-  abline(ans,col="red",lty=2,lwd=2)
-  text(Fx,Fy,paste("y =",coef,"x" ),col="blue")
-  text(Rx,Ry, paste(" Adj. R^2:",r2,"(",Pr,")"),cex=0.8,col="blue")
-
-}
-
-
 
 
 ####
@@ -145,8 +120,10 @@ TreeHeight <- function(sp,dbh){
 plot(k123[[iii]])
 d0<-data.frame(k123[[iii]])   #names(d0)
 d0<-subset(d0,dbh>=10)
-lbl0<- d0$label; sp0<-d0$sp ; dbh0<-d0$dbh ;h0<-d0$h
-#dbh0[is.na(dbh0)]<-9 ;h0[is.na(h0)]<-0 #### !!! 暫定入力
+lbl0<- d0$label; sp0<-d0$sp ; dbh0<-d0$dbh ;h0<-as.numeric(d0$h)
+#str(h0)
+#dbh0[is.na(dbh0)]<-9 ;
+h0[is.na(h0)]<- 0 #!!! 暫定入力 ####
 ba0<-pi*(dbh0/200)^2
 i<-h0==0 ; h0[i]<-TreeHeight(sp0[i],dbh0[i])
 v0<-TrunkVolume(sp0,dbh0,h0)
@@ -233,6 +210,7 @@ v_tt<-0.5*dt$th*ca2ba(ca2)
 #windows()
 par(mfrow=c(1,1))
 
+
 plot(yd_all,type="l",lwd=2,xlab="順位 (N/ha)",
      ylab="積算材積 (m^3/ha)",main=paste("収量密度図 K",iii),
      lty=2)
@@ -241,7 +219,10 @@ lines(yd_canopy_drone_針広なし,col="magenta",lty=1)		#### drone_針広なし
 lines(yd_canopy_drone_針広別,col="magenta",lty=2)		#### drone_針広別
 lines(yd_ttops_針広なし,col="blue",lty=2)	 	#### ttops (針葉樹・広葉樹分けないで　青線)
 
-legend(300,430,
+x_max <- max(yd_all[,1]) ;y_max <- max(yd_all[,2])
+x_max_canopy <- max(yd_canopy[,1]) ;y_max_canopy <- max(yd_canopy[,2])
+
+legend(1.2 * x_max_canopy ,y_max_canopy,
        c(	"現地毎木調査　(胸高以上)",
           "現地毎木調査 (林冠木)",
           "ドローン写真からの推定(針広区別なし)",
