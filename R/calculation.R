@@ -3,7 +3,7 @@
 #### 多角形の面積を求める関数　
 #' area return a  area from polygon xy coordinates
 #'
-#' @param xy a atrix or data frame of xy coordinates
+#' @param xy a matrix or data frame of xy coordinates
 #'
 #' @return a vector of polygon area
 #' @export
@@ -69,7 +69,7 @@ kaiki<-function(x=ca[i],y=ba[i],
 }
 
 # 樹冠面積　⇒　胸高直径  #####
-#' Title
+#' estimates basal area from crown area  (all tree spcies)
 #'
 #' @param ca
 #'
@@ -77,11 +77,18 @@ kaiki<-function(x=ca[i],y=ba[i],
 #' @export
 #'
 #' @examples
+#'
+#'
+#'  ca.<- 10:300
+#'  plot(ca.,ca2ba(ca.),
+#'  xlab="Crown Area (m*m)",
+#'  ylab="Basal Area (m*m)")
+#'
 ca2ba       <- function(ca){
   return(0.0044189*ca)
 }
 
-#' Title
+#' estimates basal area from crown area  (broad leaved tree spcies)
 #'
 #' @param ca
 #'
@@ -89,12 +96,17 @@ ca2ba       <- function(ca){
 #' @export
 #'
 #' @examples
+#'  ca.<- 10:300
+#'  plot(ca.,ca2ba_broad(ca.),
+#'  xlab="Crown Area (m*m)",
+#'  ylab="Basal Area (m*m)",
+#'  main="Broadleaved")
 #'
 ca2ba_broad <- function(ca){
   return(0.002090*ca)
 }
 
-#' Title
+#' estimates basal area from crown area  (conifer)
 #'
 #' @param ca
 #'
@@ -102,12 +114,17 @@ ca2ba_broad <- function(ca){
 #' @export
 #'
 #' @examples
+#'  ca.<- 10:300
+#'  plot(ca.,ca2ba_conif(ca.),
+#'  xlab="Crown Area (m*m)",
+#'  ylab="Basal Area (m*m)",
+#'  main="Conifer")
 ca2ba_conif <- function(ca){
   return(0.0075718*ca)
 }
 
 
-#' Title
+#' estimates DBH from crown area
 #'
 #' @param ca
 #'
@@ -115,13 +132,18 @@ ca2ba_conif <- function(ca){
 #' @export
 #'
 #' @examples
-#'  ca2dbh(100)
+#'  ca.<- 10:100
+#'  plot(ca.,ca2dbh(ca.),
+#'  xlab="Crown Area (m*m)",
+#'  ylab="Diameter at Breast Height (cm)")
+#'
+#'
 #'
 ca2dbh	　　　 <- function(ca){
   return(2*sqrt(0.0044189*ca/pi)*100)
 }
 
-#' Title
+#' estimates DBH from crown area (broadleaved)
 #'
 #' @param ca
 #'
@@ -129,11 +151,16 @@ ca2dbh	　　　 <- function(ca){
 #' @export
 #'
 #' @examples
+#'  ca.<- 10:100
+#'  plot(ca.,ca2dbh(ca.),
+#'  xlab="Crown Area (m*m)",
+#'  ylab="Diameter at Breast Height (cm)",
+#'  main="Broadleaved")
 ca2dbh_broad <- function(ca){
   return(2*sqrt(0.002090*ca/pi)*100)
 }
 
-#' Title
+#' estimates DBH from crown area (conifer)
 #'
 #' @param ca
 #'
@@ -141,6 +168,12 @@ ca2dbh_broad <- function(ca){
 #' @export
 #'
 #' @examples
+#'   ca.<- 10:100
+#'  plot(ca.,ca2dbh(ca.),
+#'  xlab="Crown Area (m*m)",
+#'  ylab="Diameter at Breast Height (cm)",
+#'  main="Conifer")
+#'
 ca2dbh_conif <- function(ca){
   return(2*sqrt(0.0075718*ca/pi)*100)
 }
@@ -152,7 +185,7 @@ if(0){
 
 }
 
-#' Title
+#' Calculate DBH from Basal Area
 #'
 #' @param ba
 #'
@@ -160,6 +193,13 @@ if(0){
 #' @export
 #'
 #' @examples
+#' ba2dbh(0.5)   # BA unit  m*m
+#' ba. <- seq(0.1,1,0.01)
+#' plot(ba.,ba2dbh(ba.),
+#' xlab="Basal area (m*m)",
+#' ylab="DBH (cm)")
+#'
+#'
 ba2dbh<-function(ba){
   return(100*2*sqrt(ba/pi))
 }
@@ -177,7 +217,8 @@ ba2dbh<-function(ba){
 #' dbh <- 1:100
 #' h_conif <- TreeHeight_conif(dbh)
 #'
-#' plot(dbh,h_conif,type="l",xlab="DBH (cm)",ylab="Tree Height (m)")
+#' plot(dbh,h_conif,type="l",xlab="DBH (cm)",ylab="Tree Height (m)",
+#' main="Conifer")
 TreeHeight_conif<-function(dbh){
   return(1/(1/(0.4303*(dbh^1.2620))+1/39.4))
 }
@@ -373,21 +414,7 @@ TrunkVolume <- function(sp,dbh,h){
 
 
 # 収量密度図　####
-#' Title
-#'
-#' @param dbh_
-#'
-#' @return
-#' @export
-#'
-#' @examples
-dbh.points<-function(dbh_){ #dbh_<-ba2dbh(ba)  #ordered
-  dbh_cls<-seq(120,0,-10)
-  dbh_cls_n<-rep(NA,length(dbh_cls))
-  for (i in 1:length(dbh_cls)){dbh_cls_n[i]<-rev(which(dbh_>dbh_cls[i]))[1]}
-  points(nn[dbh_cls_n],vv[dbh_cls_n])
-  text(nn[dbh_cls_n],vv[dbh_cls_n],dbh_cls)
-}
+
 
 #' Title
 #'
@@ -397,10 +424,19 @@ dbh.points<-function(dbh_){ #dbh_<-ba2dbh(ba)  #ordered
 #' @export
 #'
 #' @examples
-#' pn <- 1
+#' #### simple example
+#'
+#' v=1:100  ; a=10000
+#' plot(yield_density(v,a))
+#'
+#' #### example of Kuraiyama K123
+#'
+#' pn <- 2 # plot number
 #' d<-subset(K,plt==pn)
 #' a<-as.numeric(st_area(k123plot[[pn]]))
-#' plot(yield_density(d$v,a),
+#' v<-TrunkVolume(d$sp,d$dbh,d$h)
+#' NY <- yield_density(v,a)
+#' plot(NY,
 #'  xlab="N",
 #'  ylab="Cummulative trunk volume(m^3/ha)")
 #'
@@ -417,8 +453,8 @@ yield_density<-function(v,a){
 #' return list from dara frame
 #'
 #' @param d3  data frame
-#' @param index characters, name of index  in data frame column
-#' @param col vector of characters, data frame column names to include
+#' @param index characters,a name of index  in data frame columns
+#' @param col vector of characters, data frame column names to include in list created
 #'
 #' @return list
 #' @export
@@ -436,7 +472,7 @@ yield_density<-function(v,a){
 #'L<-dataframe2list(d3,index="L2",col=c("X","Y"))
 #' x12 <- range(d3$X) ; y12 <- range(d3$Y)
 #' plot(0,type="n",xlim=x12,ylim=y12)
-#' sapply(L,polygon)
+#' tmp. <- sapply(L,polygon)
 #'
 #'
 #'
@@ -462,7 +498,8 @@ dataframe2list <- function(d3,index="L2",col=c("X","Y")){
 #' @export
 #'
 #' @examples
-#' mtime_stamp(dir())
+#' filename <- dir()
+#' data.frame(filename,mtime=mtime_stamp(filename))
 mtime_stamp <- function(fn){
   mt <- file.info(fn)$mtime
   return(gsub("[^0-9]","",mt))

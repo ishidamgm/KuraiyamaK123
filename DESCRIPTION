@@ -1,9 +1,9 @@
 Package: kuraiyamaK123
 Type: Package
 Title: estimate forest biomass from drone(UAV) structure-from-motion photogrammetry
-Version: 0.0.230212
+Version: 0.0.2310150427
 Author: Ishida M, Kunugi A, Matsunami A
-Maintainer: Ishida M <ishidam@gifu-u.ac.jp>
+Maintainer: Ishida M <ishidam@sanchikanri.com>
 Description: estimate forest biomass from drone(UAV) structure-from-motion photogrammetry in broadlieved and coniferous forest in Giuf unversity, Kuraiyama forest in central Japan.
 License: GPL (>= 2)
 Depends: 

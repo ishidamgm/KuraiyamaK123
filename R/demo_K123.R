@@ -140,7 +140,7 @@ a <- survey_area #調査面積  8012.621
 d3<-FB@field  #read.csv("k2_maiboku.csv",fileEncoding="shift-jis") #names(d3)
 dbh3<-d3$dbh ; v3<-d3$v ;ba3 <- d3$ba
 sum(v3)
-(yd_all <- yield_density(v3)) #632 788.755639 795.80469	# 532 663.952532 719.24115
+(yd_all <- yield_density(v3,a)) #632 788.755639 795.80469	# 532 663.952532 719.24115
 
 # 樹冠に到達していたかどうかの情報 ####
 ID_feye <- d$ID[match(d3$label,lbl)]
@@ -159,16 +159,16 @@ legend(5,150,c("林冠木","下層木"),pch=c("■","□"))
 
 
 #### 毎木 (林冠木) yd_canopy
-(yd_canopy <- yield_density(v3[canopy]))	#196 244.614091 670.97851
+(yd_canopy <- yield_density(v3[canopy],a))	#196 244.614091 670.97851
 
 
 ### 張さんオリジナル yd_feye_original
 d4<-FB@drone #read.csv("k2_森林資源票ver4_matsunami_area3.csv",fileEncoding="shift-jis")
-(yd_feye_original <- yield_density(d4$volume2))	#267 333.224297 677.73153	#267 333.224297 753.79092
+(yd_feye_original <- yield_density(d4$volume2,a))	#267 333.224297 677.73153	#267 333.224297 753.79092
 
 ### 張さんオリジナル yd_feye_original 針広なし
 #d4<-read.csv("k2_森林資源票ver4_matsunami_area3.csv")
-(yd_feye_original_ <- yield_density(d4$v_))	#267 333.224297 753.79092
+(yd_feye_original_ <- yield_density(d4$v_,a))	#267 333.224297 753.79092
 
 
 #### ドローン写真からの推定 yd_canopy_drone_針広なし
@@ -176,7 +176,7 @@ ca<-ca[order(-ca)]
 ba_drone_all<-ca2ba(ca)
 dbh_drone_all<-ba2dbh(ba_drone_all)
 v__ <- ba_drone_all*h0*0.5
-( yd_canopy_drone_針広なし <- yield_density(v__)) # 227 283.303054 622.58981
+( yd_canopy_drone_針広なし <- yield_density(v__,a)) # 227 283.303054 622.58981
 
 #### ドローン写真からの推定(針葉樹・広葉樹分けて)
 i<-conif
@@ -188,14 +188,14 @@ dbh_drone_cb <-ba2dbh(ba_drone_cb)
 v_conif <- ba_drone_conif * h0[i]  * 0.5
 v_broad <- ba_drone_broad * h0[!i] * 0.5
 v_ <- c(v_conif,v_broad)
-( yd_canopy_drone_針広別 <- yield_density(v_)) # 227 283.303054 766.02678
+( yd_canopy_drone_針広別 <- yield_density(v_,a)) # 227 283.303054 766.02678
 
 #### yd_ttops_針広なし
 d2 <- FB@lidar #read.csv("K2_ttops_CrownArea2.csv")
 
 ca2<-d2$CrownArea
 v_tt<-0.5*d2$th*ca2ba(ca2)
-( yd_ttops_針広なし <- yield_density(v_tt)) # ttops 231 288.295178 570.79614
+( yd_ttops_針広なし <- yield_density(v_tt,a)) # ttops 231 288.295178 570.79614
 
 #### yd_ttops_針広別
 j<-match(d2$Id_2,d$ID)
@@ -210,7 +210,7 @@ v_tt_conif<-0.5*ca2ba_conif(ca2[i])*d2$th[i]
 v_tt_broad<-0.5*ca2ba_broad(ca2[!i])*d2$th[!i]
 v_tt_na<-0.5*ca2ba_broad(ca2[is.na(i)])*d2$th[is.na(i)]
 v_tt2<-na.omit(c(v_tt_conif,v_tt_broad,v_tt_na))
-(yd_ttops_針広別 <- yield_density(v_tt2)) 	# 231 288.295178 776.29935
+(yd_ttops_針広別 <- yield_density(v_tt2,a)) 	# 231 288.295178 776.29935
 
 # 収量密度図 ####
 par(mfrow=c(1,1))
