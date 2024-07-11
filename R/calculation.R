@@ -68,6 +68,31 @@ kaiki<-function(x=ca[i],y=ba[i],
 
 }
 
+#' statistical information of regression analysis (lm y=ax)
+#'
+#' regression of intercept = 0
+#'
+#' @param v. vector of variable
+#' @param v_ vector of variable
+#'
+#' @return data frame of statistical information
+#' @export
+#'
+#' @examples
+lm_vv <-function(v.,v_){
+  (lm.<-summary(lm(v_~v.+0)))
+  lm.. <- data.frame(
+    lm=as.character(lm.[[1]])[2],
+    n=length(v_),
+    a=a,b=b,c=c,
+    lm_a=lm.$coefficients[[1]],
+    lm_b=lm.$coefficients[[4]],
+    lm_adj.r.squared=lm.$adj.r.squared,
+    lm_se=lm.$sigma
+  )
+  return(lm..)
+}
+
 # 樹冠面積　⇒　胸高直径  #####
 #' estimates basal area from crown area  (all tree spcies)
 #'
@@ -205,6 +230,55 @@ ba2dbh<-function(ba){
 }
 
 # 胸高直径―樹高　####
+#' figure of ralatinshps between DBH (cm)and Tree Height (m) for k123
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' G(PP2)
+G<-function(P){
+  par(mfrow=c(1,1))
+  conif<-P$conif
+  plot(P$dbh[!conif],P$h_drn[!conif],xlab="DBH (cm)",ylab="Tree Height (m)",xlim=c(0,110),ylim=c(0,50))
+  points(P$dbh[conif],P$h_drn[conif],col="red",pch=2)
+  legend(0,50,c("broad leaved","conifer"),col=c("black","red"),pch=c(1,2))
+}
+
+#' Relationship between DBH and tree height (Chapman-Richards)
+#'
+#' Tree height-diameter allometry of 75 major tree species in japan.
+#' Kobayashi et al. 2021
+#'
+#' @param dbh vector of diameter at breast height (DBH : cm)
+#' @param a   default a=22.5
+#' @param b   default b=0.046
+#' @param c   default c=1.52
+#'
+#' @return   vector of tree height (m)
+#' @export
+#'
+#' @examples
+#' dbh <- 1:100
+#' plot(dbh,TreeHeight_CR(dbh,a=22.5,b=0.046,c=1.52),
+#' xlab="DBH (cm)",ylab="Tree height (m) " ,
+#' main="Relationship between DBH and tree height (Chapman-Richards model)",
+#' sub="Kobayashi et al. 2021, Abies firma ")
+#'
+#' G(P)
+#'legend(82,15,c("all species","broad leaved","conifer"),
+#'       col=c("blue","black","red"),lty=c(1,2,2),lwd=c(2,2,2))
+#'
+#'dbh. <- 1:100
+#'lines(dbh.,TreeHeight_CR(dbh.,a=36.17,b=0.02888,c=0.997),col="blue",lwd=3) # all species
+#'lines(dbh.,TreeHeight_CR(dbh.,a=33.37,b=0.03461,c=1.006751),col="black",lwd=2,lty=2) # broadleaved
+#'lines(dbh.,TreeHeight_CR(dbh.,a =41.26,b =0.02189,c=1.007),col="red",lwd=2,lty=2) # conifere
+#'
+TreeHeight_CR <- function(dbh,a=22.5,b=0.046,c=1.52){
+  return(1.3+a*((1-exp(-b*dbh)^c)))
+}
+
+
 
 #' conifer tree height estimate from DBH (diameter at brest height)
 #'
@@ -246,6 +320,35 @@ TreeHeight_broad<-function(dbh){
 }
 
 # 材積式　####
+
+#
+#' This calculates tree trun volume from crown area and tree height
+#'
+#'
+#' Estimation of Coniferous Standing Tree Volume Using Airborne LiDAR and Passive Optical Remote Sensing
+#' (Nakai et al. 2010)
+#'
+#' @param ca crown area
+#' @param h  tree height
+#' @param abc parameters default : abc=c(4.139e-05,0.3018000,2.958000) For all tree species in Kuraiyama natural forest.
+#'
+#' @return trunk volume
+#' @export
+#'
+#' @examples
+#' TrunkVolume_cah(25,30,c(10^-5.19,1.19,3.19))  #Cryptomeria japonica  (Nakai et al. 2010)
+#' abc_all        <- c(4.139e-05,0.3018000,2.958000) # all tree species in Kuraiyama natural forest.
+#' abc_conifer    <- c(5.191e-04,0.5569842,2.005132) # conifer
+#' abc_broadleabed<- c(1.422e-02,0.5073300,0.879260) # broadleaved
+#'
+TrunkVolume_cah <- function(ca,h,abc=c(4.139e-05,0.3018000,2.958000)){
+  # a=4.139e-05;b=0.3018000;c=2.958000 # all tree species in Kuraiyama natural forest.
+  # a=5.191e-04;b=0.5569842;b=2.005132 # conifer
+  # a=1.422e-02;b=0.5073300;b=0.879260 # broadleaved
+  a=abc[1] ;  b=abc[2] ;  c=abc[3]
+  v <-  a * ca^b * h ^c
+  return(v)
+}
 
 ##ヒノキ材積（岐阜地方：天然生林）####
 #' Japan Rinyacho Zaisekishiki Hinoki
@@ -400,16 +503,35 @@ TrunkVolume_broardleaved<-function(DBH,H){
 #' @export
 #'
 #' @examples
-#' TrunkVolume(c("スギ","ヒノキ","ブナ"),c(50,30,80),c(20,15,25))
+#' TrunkVolume(c("スギ","ヒノキ","アスナロ","ブナ"),c(50,30,80),c(20,15,25))
 TrunkVolume <- function(sp,dbh,h){
   v=ifelse(sp=="スギ",TrunkVolume_sugi(dbh,h),
       ifelse(sp=="ヒノキ",TrunkVolume_hinoki(dbh,h),
         ifelse(sp=="サワラ",TrunkVolume_sawara(dbh,h),
-          ifelse(sp=="アスナロ",TrunkVolume_asunaro(dbh,h),
+          ifelse(sp=="アスナロ",TrunkVolume_sawara(dbh,h),
               TrunkVolume_broardleaved(dbh,h)))))
   return(v)
 }
 
+#' calculate tree trunk volume from species,dbh, tree height using with function of Japanese governments
+#'
+#' @param sp  character vector of Japanese species name (Katakana)
+#' @param dbh vector of dbh (cm)
+#' @param h   vector of tree height (m)
+#'
+#' @return    vector of trunk volume
+#' @export
+#'
+#' @examples
+#' TrunkVolume_roman(c("sugi","hinoki","asunaro","buna"),c(50,30,80),c(20,15,25))
+TrunkVolume_roman <- function(sp,dbh,h){
+  v=ifelse(sp=="sugi",TrunkVolume_sugi(dbh,h),
+           ifelse(sp=="hinoki",TrunkVolume_hinoki(dbh,h),
+                  ifelse(sp=="sawara",TrunkVolume_sawara(dbh,h),
+                         ifelse(sp=="asunaro",TrunkVolume_sawara(dbh,h),
+                                TrunkVolume_broardleaved(dbh,h)))))
+  return(v)
+}
 
 
 
@@ -505,6 +627,69 @@ mtime_stamp <- function(fn){
   return(gsub("[^0-9]","",mt))
 }
 
+#' All file path in working directory
+#'
+#' @param wd working directory
+#'
+#' @return data frame of full path, time , size of all files in working directory
+#' @export
+#'
+#' @examples
+#'
+#' fs::dir_tree(path =getwd(), recurse = TRUE,type="dir")
+#' fullpath()
+fullpath <- function(wd=getwd()){
+  hd<-getwd()
+  setwd(wd)
+  f<-dir(recursive =TRUE)
+  f.<-sapply(f,function(s)rev(unlist(strsplit(s,"/")))[1],USE.NAMES =FALSE)
+  time = file.mtime(f) ; size=file.size(f)
+  files<-data.frame(path=f,file=f.,time,size)
+  setwd(hd)
+  return(files)
+}
+
+#' return file paths including a keyword
+#'
+#' @param ff
+#' @param keyword
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' (ff<-fullpath())
+#' file_search(ff,"k123")
+file_search <- function(ff,keyword){
+  (d. <-ff[ grep(keyword,ff$path),])
+  return((d.<-d.[order(d.$path,d.$time,d.$size),]))
+}
+
+#' return data frame of no. and file path  with a keyword
+#'
+#' @param paths vector of file names (full path)
+#' @param text character of keyword
+#'
+#' @return data frame of no. and file path  with a keyword in paths
+#' @export
+#'
+#' @examples
+#'
+#' (f<-dir(pattern="\\.R$",recursive =TRUE) ) #
+#' keyword <- "ForestTools"    # "library\\(sf"
+#' (f. <- files_keyword (f,keyword ))
+#' i<-11 ;  readLines(f[i]); grep(keyword ,readLines(f[i]))
+#' edit(file.info(f.)$file)
+files_keyword <- function(f, keyword="data")
+{
+  dat<-c()
+  for (i in 1:length(f)){
+    l<-grep(keyword,readLines(f[i]))
+    if(length(l)!=0)  dat<-rbind(dat,c(i,f[i]))
+  }
+  dat <- data.frame(no=dat[,1],file=dat[,2])
+  return(dat)
+}
 
 
 

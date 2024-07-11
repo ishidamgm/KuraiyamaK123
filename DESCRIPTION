@@ -1,7 +1,7 @@
 Package: kuraiyamaK123
 Type: Package
 Title: estimate forest biomass from drone(UAV) structure-from-motion photogrammetry
-Version: 0.0.2310150427
+Version: 0.0.231020
 Author: Ishida M, Kunugi A, Matsunami A
 Maintainer: Ishida M <ishidam@sanchikanri.com>
 Description: estimate forest biomass from drone(UAV) structure-from-motion photogrammetry in broadlieved and coniferous forest in Giuf unversity, Kuraiyama forest in central Japan.
@@ -10,7 +10,10 @@ Depends:
     R (>= 4.2.1),
     sf,
     dplyr,
-    shapefiles
+    shapefiles,
+    raster,
+    ForestTools,
+    fs
 Suggests: 
     testthat,
     knitr,
@@ -18,4 +21,4 @@ Suggests:
 VignetteBuilder: knitr
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.2
+RoxygenNote: 7.2.3
