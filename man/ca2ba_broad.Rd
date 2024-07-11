@@ -2,7 +2,7 @@
 % Please edit documentation in R/calculation.R
 \name{ca2ba_broad}
 \alias{ca2ba_broad}
-\title{Title}
+\title{estimates basal area from crown area  (broad leaved tree spcies)}
 \usage{
 ca2ba_broad(ca)
 }
@@ -10,5 +10,13 @@ ca2ba_broad(ca)
 \item{ca}{}
 }
 \description{
-Title
+estimates basal area from crown area  (broad leaved tree spcies)
+}
+\examples{
+ ca.<- 10:300
+ plot(ca.,ca2ba_broad(ca.),
+ xlab="Crown Area (m*m)",
+ ylab="Basal Area (m*m)",
+ main="Broadleaved")
+
 }

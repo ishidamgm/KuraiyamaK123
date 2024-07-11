@@ -2,7 +2,7 @@
 % Please edit documentation in R/calculation.R
 \name{ba2dbh}
 \alias{ba2dbh}
-\title{Title}
+\title{Calculate DBH from Basal Area}
 \usage{
 ba2dbh(ba)
 }
@@ -10,5 +10,14 @@ ba2dbh(ba)
 \item{ba}{}
 }
 \description{
-Title
+Calculate DBH from Basal Area
+}
+\examples{
+ba2dbh(0.5)   # BA unit  m*m
+ba. <- seq(0.1,1,0.01)
+plot(ba.,ba2dbh(ba.),
+xlab="Basal area (m*m)",
+ylab="DBH (cm)")
+
+
 }

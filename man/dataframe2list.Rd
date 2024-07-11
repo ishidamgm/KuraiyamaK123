@@ -9,9 +9,9 @@ dataframe2list(d3, index = "L2", col = c("X", "Y"))
 \arguments{
 \item{d3}{data frame}
 
-\item{index}{characters, name of index  in data frame column}
+\item{index}{characters,a name of index  in data frame columns}
 
-\item{col}{vector of characters, data frame column names to include}
+\item{col}{vector of characters, data frame column names to include in list created}
 }
 \value{
 list
@@ -32,7 +32,7 @@ d3<- as.data.frame(st_coordinates(d2))
 L<-dataframe2list(d3,index="L2",col=c("X","Y"))
 x12 <- range(d3$X) ; y12 <- range(d3$Y)
 plot(0,type="n",xlim=x12,ylim=y12)
-sapply(L,polygon)
+tmp. <- sapply(L,polygon)
 
 
 

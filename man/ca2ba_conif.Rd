@@ -2,7 +2,7 @@
 % Please edit documentation in R/calculation.R
 \name{ca2ba_conif}
 \alias{ca2ba_conif}
-\title{Title}
+\title{estimates basal area from crown area  (conifer)}
 \usage{
 ca2ba_conif(ca)
 }
@@ -10,5 +10,12 @@ ca2ba_conif(ca)
 \item{ca}{}
 }
 \description{
-Title
+estimates basal area from crown area  (conifer)
+}
+\examples{
+ ca.<- 10:300
+ plot(ca.,ca2ba_conif(ca.),
+ xlab="Crown Area (m*m)",
+ ylab="Basal Area (m*m)",
+ main="Conifer")
 }

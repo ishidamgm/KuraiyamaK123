@@ -2,7 +2,7 @@
 % Please edit documentation in R/calculation.R
 \name{ca2dbh_broad}
 \alias{ca2dbh_broad}
-\title{Title}
+\title{estimates DBH from crown area (broadleaved)}
 \usage{
 ca2dbh_broad(ca)
 }
@@ -10,5 +10,12 @@ ca2dbh_broad(ca)
 \item{ca}{}
 }
 \description{
-Title
+estimates DBH from crown area (broadleaved)
+}
+\examples{
+ ca.<- 10:100
+ plot(ca.,ca2dbh(ca.),
+ xlab="Crown Area (m*m)",
+ ylab="Diameter at Breast Height (cm)",
+ main="Broadleaved")
 }

@@ -18,10 +18,19 @@ data frame of yn (number of trees ordered with size , yield of cumulative volume
 Title
 }
 \examples{
-pn <- 1
+#### simple example
+
+v=1:100  ; a=10000
+plot(yield_density(v,a))
+
+#### example of Kuraiyama K123
+
+pn <- 2 # plot number
 d<-subset(K,plt==pn)
 a<-as.numeric(st_area(k123plot[[pn]]))
-plot(yield_density(d$v,a),
+v<-TrunkVolume(d$sp,d$dbh,d$h)
+NY <- yield_density(v,a)
+plot(NY,
  xlab="N",
  ylab="Cummulative trunk volume(m^3/ha)")
 

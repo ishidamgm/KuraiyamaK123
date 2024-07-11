@@ -16,5 +16,6 @@ vector of mtime stamp of files
 mtime_stamp
 }
 \examples{
-mtime_stamp(dir())
+filename <- dir()
+data.frame(filename,mtime=mtime_stamp(filename))
 }

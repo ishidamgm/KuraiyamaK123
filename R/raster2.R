@@ -1,16 +1,7 @@
 # raster2
 #
 # GIS function samples
-#
-# Rstudio package
 
-#   http://r-pkgs.had.co.nz/
-#
-# Some useful keyboard shortcuts for package authoring:
-#
-#   Install Package:           'Cmd + Shift + B'
-#   Check Package:             'Cmd + Shift + E'
-#   Test Package:              'Cmd + Shift + T'
 
 #  library(rgl,raster)
 #
@@ -71,11 +62,11 @@ xy2ij<-function(x,y,r){
 
 #' xy2n
 #' cell number from x,y
-#' @param x
-#' @param y
-#' @param r
+#' @param x x coordinate
+#' @param y y coordinate
+#' @param r raster
 #'
-#' @return
+#' @return integer, cell number
 #' @export
 #'
 #' @examples
@@ -132,27 +123,25 @@ surface3dr<-function(r,...){
 #' @param ext_
 #' @param files
 #' @param extents
-#' @param rect_drow
+#' @param rect_drow draw the extent on map
 #'
-#' @return
+#' @return file names of dsm files including extents from horizontal coordinates
 #' @export
 #'
 #' @examples
-#'
-#'
-#' ext_dsm<-read.csv("extents_dsm.csv")
+#' # you need files "../gis/dsm/extents_dsm.csv"
+#' ext_dsm<-read.csv("../gis/dsm/extents_dsm.csv")
 #' ext_ <- c(5100,5200,-1400,1100)
 #' dsm_files(ext_)
-dsm_files<-function(ext_=c(5100,5200,-1400,1100),files=ext_dsm$f,extents=ext_dsm[,c("x1","x2","y1","y2")],rect_drow=T){
+dsm_files<-function(ext_=c(5100,5200,-1400,1100),files=ext_dsm$f,extents=ext_dsm[,c("x1","x2","y1","y2")],rect_drow=F){
   if(rect_drow)rect(ext_[1],ext_[3],ext_[2],ext_[4],border="red")
+  x1 <- extents[,1] ; x2 <- extents[,2] ; y1 <- extents[,3] ; y2 <- extents[,4]
   i<-which( (x1<=ext_[1] & x2<=ext_[2]) & (y1<=ext_[3] & y2<=ext_[4]))
   return(ext_dsm$f[i])
 }
 
 
 
-#################
-#### return z (ground levels) form x , y using DTM matrix
 #' Title
 #'
 #' @param x
@@ -161,10 +150,11 @@ dsm_files<-function(ext_=c(5100,5200,-1400,1100),files=ext_dsm$f,extents=ext_dsm
 #' @param y_axis
 #' @param m
 #'
-#' @return
+#' @return return z (ground levels) form x , y using DTM matrix
 #' @export
 #'
 #' @examples
+#'
 dtm_z<-function(x,y,x_axis,y_axis,m){
   i <- round((x-x1)/xstp) ;i[i==0]<-1 #range(i)
   j <- round((y-y1)/ystp) ;j[j==0]<-1 # range(j)
@@ -173,7 +163,6 @@ dtm_z<-function(x,y,x_axis,y_axis,m){
 
 
 
-#################
 
 #' Title
 #'
@@ -190,6 +179,7 @@ dtm_z<-function(x,y,x_axis,y_axis,m){
 #' @export
 #'
 #' @examples
+#'
 xy_dchm_max <- function(x,y,h,m,x1=x1,xstp=0.5,y1=y1,ystp=0.5){
   #x=dsm$x;y=dsm$y;z=dsm$z;xstp=0.5;ystp=0.5;h=dchm$h
   nr <- nrow(m);nc <- ncol(m) #nr*nc
@@ -204,6 +194,5 @@ xy_dchm_max <- function(x,y,h,m,x1=x1,xstp=0.5,y1=y1,ystp=0.5){
   return(dchm_max=m2)
 }
 
-####################
 
 

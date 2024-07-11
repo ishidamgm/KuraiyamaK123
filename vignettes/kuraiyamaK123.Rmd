@@ -1,0 +1,80 @@
+---
+title: "kuraiyamaK123"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{kuraiyamaK123}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+
+
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  #echo = FALSE, 
+  collapse = TRUE,
+  comment = "#>",
+  warning = FALSE, 
+  message = FALSE) 
+
+library(kuraiyamaK123)
+library(kableExtra)
+library(ggplot2)
+library(sf)
+```
+
+# Study sites
+```{r sites, echo=FALSE, results='asis'}
+knitr::kable( k123_site, caption = "List of survey plots", booktabs = TRUE) %>% 
+  kableExtra::kable_styling(font_size = 10, latex_options = "HOLD_position")
+
+```
+# R Data
+FB (matsunam_ForestBiomassFieldDroneLiDar_FB)
+                                             
+K                                            
+P (k123_2023)                                
+P (k123_2023_P)                              
+P (k123drone_P)                              
+PP                                           
+PP2                                          
+PP3                                          
+PP4                                          
+PP8                                          
+SP (K123_species)                            
+TT                                           
+TreeHeight_CR_abc                            
+d (polygon_k123_2023)                        
+k123 (K123)                                  
+k123_points                                  
+k123_site                                    
+k123crown                                    
+k123crown (k123crown_20230205)               
+k123plot (K123plot)                          
+k123ttop                                     
+ttops_CrownArea (K123ttops_CrownArea) 
+
+
+
+# Field Notes of K123
+```{r k123}
+
+k123
+
+
+```
+
+# Tree species
+```{r species, echo=FALSE, results='asis'}
+knitr::kable( SP[,c("sp","ScienceName")], caption = "List of tree species", booktabs = TRUE)
+```
+
+#  CrownMap
+```{r CrownMap, echo=FALSE}
+
+demo_plot_K123(1)
+demo_plot_K123(2)
+demo_plot_K123(3)
+```

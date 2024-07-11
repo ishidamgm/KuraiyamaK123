@@ -2,7 +2,7 @@
 % Please edit documentation in R/calculation.R
 \name{ca2dbh_conif}
 \alias{ca2dbh_conif}
-\title{Title}
+\title{estimates DBH from crown area (conifer)}
 \usage{
 ca2dbh_conif(ca)
 }
@@ -10,5 +10,13 @@ ca2dbh_conif(ca)
 \item{ca}{}
 }
 \description{
-Title
+estimates DBH from crown area (conifer)
+}
+\examples{
+  ca.<- 10:100
+ plot(ca.,ca2dbh(ca.),
+ xlab="Crown Area (m*m)",
+ ylab="Diameter at Breast Height (cm)",
+ main="Conifer")
+
 }

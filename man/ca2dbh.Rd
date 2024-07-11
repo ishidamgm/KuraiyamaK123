@@ -2,7 +2,7 @@
 % Please edit documentation in R/calculation.R
 \name{ca2dbh}
 \alias{ca2dbh}
-\title{Title}
+\title{estimates DBH from crown area}
 \usage{
 ca2dbh(ca)
 }
@@ -10,9 +10,14 @@ ca2dbh(ca)
 \item{ca}{}
 }
 \description{
-Title
+estimates DBH from crown area
 }
 \examples{
- ca2dbh(100)
+ ca.<- 10:100
+ plot(ca.,ca2dbh(ca.),
+ xlab="Crown Area (m*m)",
+ ylab="Diameter at Breast Height (cm)")
+
+
 
 }

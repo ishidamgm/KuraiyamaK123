@@ -19,5 +19,6 @@ conifer tree height estimate from DBH (diameter at brest height)
 dbh <- 1:100
 h_conif <- TreeHeight_conif(dbh)
 
-plot(dbh,h_conif,type="l",xlab="DBH (cm)",ylab="Tree Height (m)")
+plot(dbh,h_conif,type="l",xlab="DBH (cm)",ylab="Tree Height (m)",
+main="Conifer")
 }

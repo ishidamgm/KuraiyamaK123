@@ -337,14 +337,18 @@ TreeHeight_broad<-function(dbh){
 #'
 #' @examples
 #' TrunkVolume_cah(25,30,c(10^-5.19,1.19,3.19))  #Cryptomeria japonica  (Nakai et al. 2010)
-#' abc_all        <- c(4.139e-05,0.3018000,2.958000) # all tree species in Kuraiyama natural forest.
-#' abc_conifer    <- c(5.191e-04,0.5569842,2.005132) # conifer
-#' abc_broadleabed<- c(1.422e-02,0.5073300,0.879260) # broadleaved
+#' #abc_all        <- c(4.139e-05,0.3018000,2.958000) # all tree species in Kuraiyama natural forest.
+#' #abc_conifer    <- c(5.191e-04,0.5569842,2.005132) # conifer
+#' #abc_broadleabed<- c(1.422e-02,0.5073300,0.879260) # broadleaved
+#'  abc_all         <-c(4.147e-05,3.017e-01,2.958e+00)
+#'  abc_conifer     <-c( 0.0003358,0.5014047,2.1866917)
+#'  abc_broadleabed<-c(0.04063, 0.60575,0.38452)
+#'  TrunkVolume_cah(15:25,20:30,abc_conifer)
 #'
-TrunkVolume_cah <- function(ca,h,abc=c(4.139e-05,0.3018000,2.958000)){
-  # a=4.139e-05;b=0.3018000;c=2.958000 # all tree species in Kuraiyama natural forest.
-  # a=5.191e-04;b=0.5569842;b=2.005132 # conifer
-  # a=1.422e-02;b=0.5073300;b=0.879260 # broadleaved
+TrunkVolume_cah <- function(ca,h,abc=c(4.147e-05,0.3017000,2.958000)){
+  #  abc <-c(a=4.147e-05,b=3.017e-01,c=2.958e+00) #all
+  #  abc <-c( a=0.0003358,b=0.5014047,c=2.1866917)#conifer
+  #  abc <-c(a=0.04063, b=0.60575,c=0.38452)      #broadleabed
   a=abc[1] ;  b=abc[2] ;  c=abc[3]
   v <-  a * ca^b * h ^c
   return(v)

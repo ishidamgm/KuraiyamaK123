@@ -7,7 +7,7 @@
 area(xy)
 }
 \arguments{
-\item{xy}{a atrix or data frame of xy coordinates}
+\item{xy}{a matrix or data frame of xy coordinates}
 }
 \value{
 a vector of polygon area

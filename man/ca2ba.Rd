@@ -2,7 +2,7 @@
 % Please edit documentation in R/calculation.R
 \name{ca2ba}
 \alias{ca2ba}
-\title{Title}
+\title{estimates basal area from crown area  (all tree spcies)}
 \usage{
 ca2ba(ca)
 }
@@ -10,5 +10,14 @@ ca2ba(ca)
 \item{ca}{}
 }
 \description{
-Title
+estimates basal area from crown area  (all tree spcies)
+}
+\examples{
+
+
+ ca.<- 10:300
+ plot(ca.,ca2ba(ca.),
+ xlab="Crown Area (m*m)",
+ ylab="Basal Area (m*m)")
+
 }
