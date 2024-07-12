@@ -41,13 +41,15 @@ kaiki(
 
 \item{Ry}{a value of vertical position of  text "Adj. R^2 (P)"}
 }
+\value{
+results of regression
+}
 \description{
 correlation analysis between basal area and crown area
 
 correlation analysis between basal area and crown area
 }
 \examples{
-windows()
 par(mfrow=c(1,3))
 #針葉樹
 i<-conif

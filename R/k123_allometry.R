@@ -1,6 +1,5 @@
 # k123_allometry.R
 
-library(kuraiyamaK123)
 
 #' figure of ralatinshps between DBH (cm)and Tree Height (m) for k123
 #'

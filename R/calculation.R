@@ -33,11 +33,10 @@ area <- function(xy){
 #' @param Rx a value of horizontal position of  text "Adj. R^2 (P)"
 #' @param Ry a value of vertical position of  text "Adj. R^2 (P)"
 #'
-#' @return
+#' @return results of regression
 #' @export
 #'
 #' @examples
-#' windows()
 #' par(mfrow=c(1,3))
 #' #針葉樹
 #' i<-conif
@@ -65,7 +64,7 @@ kaiki<-function(x=ca[i],y=ba[i],
   abline(ans,col="red",lty=2,lwd=2)
   text(Fx,Fy,paste("y =",coef,"x" ),col="blue")
   text(Rx,Ry, paste(" Adj. R^2:",r2,"(",Pr,")"),cex=0.8,col="blue")
-
+　return(ans)
 }
 
 #' statistical information of regression analysis (lm y=ax)
