@@ -7,7 +7,10 @@
 ca2ba_broad(ca)
 }
 \arguments{
-\item{ca}{}
+\item{ca}{vector of crown area  (broad leaved tree spcies)}
+}
+\value{
+vector of basal area  (broad leaved tree spcies)
 }
 \description{
 estimates basal area from crown area  (broad leaved tree spcies)

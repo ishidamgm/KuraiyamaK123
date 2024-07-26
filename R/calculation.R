@@ -25,9 +25,9 @@ area <- function(xy){
 #'
 #' @param x numeric vector of crown area
 #' @param y numeric vector of basal area
-#' @param main
-#' @param ylab
-#' @param xlab
+#' @param main character for title name of plot
+#' @param ylab character for y label
+#' @param xlab character for x label
 #' @param Fx a value of horizontal position of  text "y = a x"
 #' @param Fy  a value of vertical position of  text "y = a x"
 #' @param Rx a value of horizontal position of  text "Adj. R^2 (P)"
@@ -37,6 +37,8 @@ area <- function(xy){
 #' @export
 #'
 #' @examples
+#' d <- data.frame(k123_field)
+#' conif <- d$conif==1 ; ca <- d$ca ; ba <- pi*(d$dbh/200)^2
 #' par(mfrow=c(1,3))
 #' #針葉樹
 #' i<-conif
@@ -67,23 +69,31 @@ kaiki<-function(x=ca[i],y=ba[i],
 　return(ans)
 }
 
+# lm_xy (rename from lm_vv)####
 #' statistical information of regression analysis (lm y=ax)
 #'
+#' (rename from lm_vv)
 #' regression of intercept = 0
 #'
-#' @param v. vector of variable
-#' @param v_ vector of variable
+#' @param x vector of variable
+#' @param y vector of variable
 #'
 #' @return data frame of statistical information
 #' @export
 #'
 #' @examples
-lm_vv <-function(v.,v_){
-  (lm.<-summary(lm(v_~v.+0)))
+#' slotNames(TV2)
+#' x<-TV2@conifer_vv$v.
+#' y<-TV2@conifer_vv$v_
+#' plot(x,y)
+#' lm_xy(x,y)
+#' TV2@conifer_reg
+#'
+lm_xy <-function(x,y){
+  lm.<-summary(lm(y~x+0))
   lm.. <- data.frame(
     lm=as.character(lm.[[1]])[2],
-    n=length(v_),
-    a=a,b=b,c=c,
+    n=length(x),
     lm_a=lm.$coefficients[[1]],
     lm_b=lm.$coefficients[[4]],
     lm_adj.r.squared=lm.$adj.r.squared,
@@ -95,9 +105,9 @@ lm_vv <-function(v.,v_){
 # 樹冠面積　⇒　胸高直径  #####
 #' estimates basal area from crown area  (all tree spcies)
 #'
-#' @param ca
+#' @param ca vector of crown area
 #'
-#' @return
+#' @return vector of basal area
 #' @export
 #'
 #' @examples
@@ -114,9 +124,9 @@ ca2ba       <- function(ca){
 
 #' estimates basal area from crown area  (broad leaved tree spcies)
 #'
-#' @param ca
+#' @param ca vector of crown area  (broad leaved tree spcies)
 #'
-#' @return
+#' @return vector of basal area  (broad leaved tree spcies)
 #' @export
 #'
 #' @examples
@@ -132,9 +142,9 @@ ca2ba_broad <- function(ca){
 
 #' estimates basal area from crown area  (conifer)
 #'
-#' @param ca
+#' @param ca vector of crown area  (conifer)
 #'
-#' @return
+#' @return vector of basal area  (conifer)
 #' @export
 #'
 #' @examples
@@ -150,9 +160,9 @@ ca2ba_conif <- function(ca){
 
 #' estimates DBH from crown area
 #'
-#' @param ca
+#' @param ca vector of crown area
 #'
-#' @return
+#' @return vector of DBH (diameter at breast height)
 #' @export
 #'
 #' @examples
@@ -169,9 +179,9 @@ ca2dbh	　　　 <- function(ca){
 
 #' estimates DBH from crown area (broadleaved)
 #'
-#' @param ca
+#' @param ca vector of crown area
 #'
-#' @return
+#' @return vector of DBH (diameter at breast height)
 #' @export
 #'
 #' @examples
@@ -188,7 +198,7 @@ ca2dbh_broad <- function(ca){
 #'
 #' @param ca
 #'
-#' @return
+#' @return DBH (conifer)
 #' @export
 #'
 #' @examples
@@ -211,9 +221,9 @@ if(0){
 
 #' Calculate DBH from Basal Area
 #'
-#' @param ba
+#' @param ba vector of basal area
 #'
-#' @return
+#' @return vector of DBH
 #' @export
 #'
 #' @examples
@@ -231,16 +241,17 @@ ba2dbh<-function(ba){
 # 胸高直径―樹高　####
 #' figure of ralatinshps between DBH (cm)and Tree Height (m) for k123
 #'
-#' @return
+#' @return only plot
 #' @export
 #'
 #' @examples
-#' G(PP2)
-G<-function(P){
+#' P <- data.frame(k123_field)
+#' DBHTreeHeightPlots123(P)
+DBHTreeHeightPlots123<-function(P){
   par(mfrow=c(1,1))
-  conif<-P$conif
-  plot(P$dbh[!conif],P$h_drn[!conif],xlab="DBH (cm)",ylab="Tree Height (m)",xlim=c(0,110),ylim=c(0,50))
-  points(P$dbh[conif],P$h_drn[conif],col="red",pch=2)
+  conif<-P$conif==1
+  plot(P$dbh[!conif],P$h_drone[!conif],xlab="DBH (cm)",ylab="Tree Height (m)",xlim=c(0,110),ylim=c(0,50))
+  points(P$dbh[conif],P$h_drone[conif],col="red",pch=2)
   legend(0,50,c("broad leaved","conifer"),col=c("black","red"),pch=c(1,2))
 }
 
@@ -263,8 +274,8 @@ G<-function(P){
 #' xlab="DBH (cm)",ylab="Tree height (m) " ,
 #' main="Relationship between DBH and tree height (Chapman-Richards model)",
 #' sub="Kobayashi et al. 2021, Abies firma ")
-#'
-#' G(P)
+#' P <- data.frame(k123_field)
+#' DBHTreeHeightPlots123(P)
 #'legend(82,15,c("all species","broad leaved","conifer"),
 #'       col=c("blue","black","red"),lty=c(1,2,2),lwd=c(2,2,2))
 #'
@@ -318,10 +329,113 @@ TreeHeight_broad<-function(dbh){
   return(1/(1/(1.4357*(dbh^0.9276))+1/39.9))
 }
 
+
+#' calculate tree height from species and dbh using with function (Kato)
+#'
+#' @param conif_sp  character vector of conifer specie list
+#' @param sp  character vector of  species to calculate tree height
+#' @param dbh vector of dbh (cm)
+#'
+#' @return    vector of tree height
+#' @export
+#'
+#' @examples
+#' TreeHeight(c("スギ"),c("スギ","ヒノキ","ブナ"),c(50,30,80))
+#'
+TreeHeight <- function(conif_sp,sp,dbh){
+  h=ifelse(is.element(sp,conif_sp),TreeHeight_conif(dbh),
+           TreeHeight_broad(dbh))
+  return(h)
+}
+
+# 胸高直径-樹冠面積 ####
+
+
+# estimation from crown area and tree height ####
+#' Estimate DBH (diameter at breast height) from crown area and tree height
+#'
+#'  "dbh = a * ca ^b * h^c"
+#'  DBH_cah_abc$all,$conifer,$broadleaved
+#' @param ca vector of  crown area
+#' @param h  vector of
+#' @param abc  a vevtor of parameters abc ,default "all species"
+#'
+#' @return vector of DBH
+#' @export
+#'
+#' @examples
+#' p<-subset(k123_field,vital>0 & crown==1)
+#' ca<-p$ca ; h<- p$h ; dbh <- p$dbh ; conif <- p$conif==1
+#' DBH_cah_abc
+#'
+#' par(mfrow=c(1,3))
+#' i<-conif
+#' # all tree species ####
+#' dbh. <-  DBH_cah(ca,h)
+#' plot(dbh,dbh.,xlab="DBH (field)",ylab="DBH_ca_h",main="All species")
+#' points(dbh[i],dbh.[i],col="red")
+#' (lm.all <- summary(lm(dbh~dbh.-1)))
+#' lines(c(0,120),c(0,120))
+#'
+#' # Conifer ####
+#' dbh. <-  DBH_cah(ca[conif],h[conif],abc=DBH_cah_abc$conifer)
+#' plot(dbh[i],dbh.,xlab="DBH (field)",ylab="DBH_ca_h",main="Conifer",col="red")
+#'(lm.conif <- summary(lm(dbh[i]~dbh.-1)))
+#'lines(c(0,120),c(0,120))
+#'
+#'# Broadleaved ####
+#' dbh. <-  DBH_cah(ca[!i],h[!i],abc=DBH_cah_abc$broadleaved)
+#' plot(dbh[!i],dbh.,xlab="DBH (field)",ylab="DBH_ca_h",main="Broadleaved")
+#' (lm.broad <-summary(lm(dbh[!i]~dbh.-1)))
+#' lines(c(0,120),c(0,120))
+#' # statistical table ####
+#' adj.r.squared <- c(lm.all$adj.r.squared,lm.broad$adj.r.squared,lm.conif$adj.r.squared)
+#' P <- c(lm.all$coefficients[, "Pr(>|t|)"],lm.broad$coefficients[, "Pr(>|t|)"],lm.conif$coefficients[, "Pr(>|t|)"])
+#' data.frame(t(DBH_cah_abc),adj.r.squared,P)
+#'
+DBH_cah<-function(ca,h, abc=DBH_cah_abc$all){
+  return(abc[1]*ca^abc[2]*h^abc[3])　　
+}
+
+
 # 材積式　####
+# TV class for TreeTrunk_cah ####
+#' S4 class object for tree trunk volume regression analysis
+#'
+#' Vrin: Tree trunk volume calculated from DBH and tree height with Japanese Rinyacho Zaisekishiki (Table of tree trunk volume),
+#' Vcah: Tree trunk volume calculated from crown area and tree height.
+#' The class object "TrunkVolume_cah" is used for regression analysis between Vrin and Vcah.
+#'
+#' @slot conifer_vv data.frame.
+#' @slot conifer_reg data.frame.
+#' @slot broadleaved_vv data.frame.
+#' @slot broadleaved_reg data.frame.
+#' @slot all_vv data.frame.
+#' @slot all_reg data.frame.
+#'
+#' @return S4 class object of "TrunkVolume_cah"
+#'
+#' @export
+#'
+#' @examples
+#' TVcah <- new("TrunkVolume_cah")
+#' slotNames(TVcah)
+#' TVcah
+#' # save(TVcah, file = "data/TV.RData")
+
+setClass("TrunkVolume_cah",
+         slots = c(
+           conifer_vv = "data.frame",
+           conifer_reg = "data.frame",
+           broadleaved_vv = "data.frame",
+           broadleaved_reg = "data.frame",
+           all_vv = "data.frame",
+           all_reg = "data.frame"
+         )
+)
 
 #
-#' This calculates tree trun volume from crown area and tree height
+#' This calculates tree trunk volume from crown area and tree height
 #'
 #'
 #' Estimation of Coniferous Standing Tree Volume Using Airborne LiDAR and Passive Optical Remote Sensing
@@ -353,6 +467,53 @@ TrunkVolume_cah <- function(ca,h,abc=c(4.147e-05,0.3017000,2.958000)){
   return(v)
 }
 
+#' Figure of tree trunk volumes (field (Rinya v=f(dbh,h))vs. drone(a ca^b H^c))
+#'
+#' This makes figure of relationships between
+#' tree trunk volumes calculated from DBH measured in field survey and
+#' calculated from  crown area  measured with drone ortho ("m^2")"
+#' (old name of this function : ggplot_vv)
+#'
+#' @param vv   data.frame(v_=field, v.=drone)
+#' @param lm_vv_ statistical data (lm,n ,a ,b,c,lm_a,lm_b,lm_adj.r.squared,lm_se)
+#'
+#' @return graphics of relationships two(field vs. drone) tree trunk volumes
+#' @export
+#'
+#' @examples
+#'g1<-TrunkVolume_cah_fig(TV2@conifer_vv,TV2@conifer_reg,"Conifer ")
+#'g2<-TrunkVolume_cah_fig(TV2@broadleaved_vv,TV2@broadleaved_reg,"Broadleaved ")
+#'g3<-TrunkVolume_cah_fig(TV2@all_vv,TV2@all_reg,"All tree species")
+#'gridExtra::grid.arrange(g1, g2, g3,nrow=1)
+TrunkVolume_cah_fig<-function(vv=vv,lm_vv_=lm_vv_,title_="conif"){
+  s <-lm_vv_
+  a10<-round(log(s$a,10),2) ; b2<-round(s$b,2) ;c2<-round(s$c,2)
+  rr <- round(s$lm_adj.r.squared,2)
+  se <- s$lm_s
+
+  p <- ggplot(vv, aes(x=v_, y=v.))+geom_point(alpha = 1)+
+    ggtitle(title_)+
+    theme(plot.margin= unit(c(1, 2, 1, 1), "lines"))+
+    #theme(plot.title = element_text(hjust = 0.5)) +
+    theme(plot.title = element_text(size=15,hjust = 0.5))+
+    labs(x = expression("calculated from DBH measured in field survey ("*m^2*")"),
+         y =expression("calculated from  crown area \n measured with drone ortho ("*m^2*")"))+
+    theme(axis.text.x = element_text(size = 10),axis.title.x = element_text(size =12))+
+    theme(axis.text.y = element_text(size = 10),axis.title.y = element_text(size =12))+
+    annotate("text", x = 2, y = 9.2,
+             label =bquote(italic("V= 10"^.(a10)~"   CA "^.(b2)~"   H"^.(c2))),
+             col = "red", size = 4)+
+    annotate("text",x=1.5,y=8.5,label=bquote(italic("R"^2~"="~.(rr))),
+             size=3,col="red")+
+    annotate("text", x = 1.5, y = 7.7,
+             label =bquote(italic("SE = "~.(round(se,3))))
+             ,size=3,col="red")+
+    geom_abline(intercept = 0, slope = s$lm_a)  +
+    scale_x_continuous(breaks=seq(0,10,1),limits=c(0,10))+
+    scale_y_continuous(breaks=seq(0,10,1),limits=c(0,10))
+  plot(p)
+}
+
 ##ヒノキ材積（岐阜地方：天然生林）####
 #' Japan Rinyacho Zaisekishiki Hinoki
 #'
@@ -382,7 +543,7 @@ TrunkVolume_hinoki<-function(DBH,H){
    }
 
 
-##サワラ、ヒバ材積(岐阜地方天然生林）##
+##サワラ、ヒバ材積(岐阜地方天然生林）####
 #' Japan Rinyacho Zaisekishiki Sawara, Hiba
 #'
 #' @param DBH numeric vector of DBH
@@ -406,7 +567,7 @@ TrunkVolume_sawara<-function(DBH,H){
  return(v)
 }
 
-##スギ材積式（岐阜地方）##
+##スギ材積式（岐阜地方）####
 
 #' Japan Rinyacho Zaisekishiki Sugi (Cryptomeria japonica)
 #'
@@ -465,7 +626,7 @@ TrunkVolume_momi <- function(DBH,H){
    return(v)
   }
 
-##広葉樹材積量（岐阜地方）##
+##広葉樹材積量（岐阜地方）####
 #' Japan Rinyacho Zaisekishiki broadleaved species
 #'
 #' @param DBH numeric vector of DBH
@@ -536,12 +697,217 @@ TrunkVolume_roman <- function(sp,dbh,h){
   return(v)
 }
 
+# TrunkVolume_cah_model.R ####
+
+#' Estimate parameters for function of tree trunk volume with crown area and tree height
+#'
+#' TrunkVolume = a * CrownArea^b * TreeHeight^c
+#'
+#' @param d data.frame
+#'
+#' @return TV list of nls results (TV$all, TV$conifer, TV$broadleaved)
+#' @export
+#'
+#' @examples
+#' # data set from  k123_field ####
+#' d <- k123_field
+#' sp <- d$sp ; dbh <- d$dbh ;  h <- d$h ;  ca <- d$ca
+#' conif <- d$conif==1 ; crown <- d$crown==1
+#' v <-TrunkVolume_roman(sp,dbh,h)
+#' d <- data.frame(sp,dbh,h,ca,v,conif,crown)
+#' d <- na.omit(d)
+#' head(d)
+#' # all tree species ####
+#'
+#' all <- TrunkVolume_cah_model(d)
+#' summary(all)
+#'
+#' # coniferous species ####
+#' conifer <- TrunkVolume_cah_model(subset(d,conif))
+#' summary(conifer)
+#'
+#' # broadleaved tree species ####
+#' broadleaved <- TrunkVolume_cah_model(subset(d,!conif),a=0.01136,b=0.65086,c=0.78120)
+#' summary(broadleaved)
+#' TV <- list(all=all,conifer=conifer,broadleaved=broadleaved)
+#' TV
+#' # save(TV,file="TrunkVolume_cah_TV.RData")
+#' # load("TrunkVolume_cah_TV.RData")
+#' l <- lapply(TV,nls_model_summary)
+#'
+#' df<-data.frame(n=rbind(l$all$n,l$conifer$n,l$broadleaved$n),row.names=c("all","conifer","bloadleaved"))
+#' df<-data.frame(df,rbind(l$all$coef,l$conifer$coef,l$broadleaved$coef))
+#' df<-data.frame(df,rbind(l$all$ast,l$conifer$ast,l$broadleaved$ast),rbind(l$all$P,l$conifer$P,l$broadleaved$P))
+#' df<-data.frame(df,ResidualStandardError=rbind(l$all$se,l$conifer$se,l$broadleaved$se))
+#' df<-data.frame(df,Adjusted_R_squared=rbind(l$all$adjR2,l$conifer$adjR2,l$broadleaved$adjR2))
+#' df
+#' # save(df,file="TrunkVolume_cah_df.RData")
+TrunkVolume_cah_model　<-function(d,a = 4.147e-05, b = 0.3017, c = 2.958){
+  # caret用のカスタムトレーニング関数の定義
+  nlsFit <- function(x, y, wts, param, lev, last, classProbs, ...) {
+    df <- data.frame(v = y, ca = x[,1], h = x[,2])
+    mod <- nls(v ~ a * ca^b * h^c, data = df, start = list(a = param$a, b = param$b, c = param$c))
+    mod
+  }
+
+  # 予測関数の定義
+  nlsPredict <- function(modelFit, newdata, preProc = NULL, submodels = NULL) {
+    predict(modelFit, newdata = data.frame(ca = newdata[,1], h = newdata[,2]))
+  }
+
+  # モデルの格納
+  nlsModel <- list(
+    type = "Regression",
+    library = NULL,
+    loop = NULL,
+    parameters = data.frame(parameter = c("a", "b", "c"),
+                            class = rep("numeric", 3),
+                            label = c("a", "b", "c")),
+    grid = function(x, y, len = NULL, search = "grid") {},
+    fit = nlsFit,
+    predict = nlsPredict,
+    prob = NULL,
+    varImp = NULL
+  )
+
+
+  # トレーニングデータとテストデータに分割
+  set.seed(123)
+  trainIndex <- createDataPartition(d$v, p = .8, list = FALSE)
+  trainData <- d[trainIndex,]
+  testData  <- d[-trainIndex,]
+
+  # k分割交差検証の設定
+  set.seed(123)
+  train_control <- trainControl(method = "cv", number = 10)
+
+  # モデルのトレーニング
+  tunedParams <- expand.grid(a = a, b = b, c = c)
+  nls_fit <- train(
+    x = trainData[, c("ca", "h")],
+    y = trainData$v,
+    method = nlsModel,
+    trControl = train_control,
+    tuneGrid = tunedParams
+  )
+
+  # モデルの結果を表示
+  #print(nls_fit)
+
+
+  # クロスバリデーションで得られた最適なパラメータを使用して、全データで最終モデルをフィッティング
+  final_model <- nls(v ~ a * ca^b * h^c, data = d, start = list(a = a, b = b, c = c))
+
+  # 最終モデルの要約を表示
+  #summary(final_model)
+  return(final_model)
+}
+
+#' summarize of nls(Nonlinear Least Squares) result
+#'
+#' @param nls_res nls(Nonlinear Least Squares) result
+#'
+#' @return data frame of summarized nls result
+#'
+#' @export
+#'
+#' @examples
+#' nls_model_summary(TV$all)
+#' nls_model_summary(TV$conifer)
+#' nls_model_summary(TV$broadleaved)
+nls_model_summary <- function(nls_res=TV$all){
+  # パラメーターの推定値と標準誤差の抽出
+  model_summary <- summary(nls_res)
+
+
+
+  # パラメーターの推定値
+  params <- coef(model_summary)
+  # 標準誤差
+  stderr <- coef(model_summary, se = TRUE)[, "Std. Error"]
+
+  # t値
+  tvalues <- params / stderr
+
+  # p値の計算
+  pvalues <- 2 * pt(abs(tvalues), df.residual(nls_res), lower.tail = FALSE)
+
+  # 結果をデータフレームにまとめる
+  result <- data.frame(
+    #Parameter = names(params),
+    Estimate = params,
+    Std.Error = stderr,
+    t.value = tvalues,
+    p.value = pvalues
+  )
+  result <- data.frame(
+    #Parameter = names(params),
+    params,
+    stderr,
+    tvalues,
+    pvalues
+  )
+
+  # return(result)
+
+  residual_standard_error <- model_summary$sigma
+  # 調整済み決定係数の計算
+  residuals <- resid(nls_res)
+  sse <- sum(residuals^2)  # 残差平方和 (Sum of Squared Errors)
+  sst <- sum((d$v - mean(d$v))^2)  # 全平方和 (Total Sum of Squares)
+  r_squared <- 1 - (sse / sst)  # 決定係数 (R-squared)
+  n <- length(residuals)  # 観測数
+  p <- length(coef(nls_res))  # パラメーター数
+  adjusted_r_squared <- 1 - ((1 - r_squared) * (n - 1) / (n - p - 1))  # 調整済み決定係数
+
+  # summary list
+  coef_summary <- model_summary$coefficients
+  n <- length(predict(nls_res))
+  coef <- coef_summary[,"Estimate"]
+  P <- coef_summary[,"Pr(>|t|)"]
+  ast <- sapply(P,p_value_to_asterisk )
+  se <- residual_standard_error
+  adjR2 <- adjusted_r_squared
+  l <- list(n=n,coef=coef,P=P,ast=ast,se=se,adjR2=adjR2)
+
+  return(l)
+
+}
+
+
+# p値をアスタリスクに変換する関数 ####
+#
+#' p_value_to_asterisk
+#'
+#' @param a P values
+#'
+#' @return strings P<0.05 "*", 0.01 "**", 0.001 "***"
+#' @export
+#'
+#' @examples
+#' p<-c(5.588200e-03,3.021976e-26,1.196543e-97,0.2,0.05,0.01 )
+#' sapply(p,p_value_to_asterisk )
+
+p_value_to_asterisk <- function(p_value) {
+  if (p_value < 0.001) {
+    return("***")
+  } else if (p_value < 0.01) {
+    return("**")
+  } else if (p_value < 0.05) {
+    return("*")
+  } else {
+    return("")
+  }
+}
+
+
+
 
 
 # 収量密度図　####
 
 
-#' Title
+#' YN plot
 #'
 #' @param v volume of trees
 #' @param a area of plot
@@ -557,13 +923,14 @@ TrunkVolume_roman <- function(sp,dbh,h){
 #' #### example of Kuraiyama K123
 #'
 #' pn <- 2 # plot number
-#' d<-subset(K,plt==pn)
-#' a<-as.numeric(st_area(k123plot[[pn]]))
+#' d<-subset(k123_field,plot==pn)
+#' a<-k123_site$area[pn]
 #' v<-TrunkVolume(d$sp,d$dbh,d$h)
 #' NY <- yield_density(v,a)
 #' plot(NY,
 #'  xlab="N",
-#'  ylab="Cummulative trunk volume(m^3/ha)")
+#'  ylab="Cummulative trunk volume(m^3/ha)",
+#'  main=paste("Site :",pn))
 #'
 yield_density<-function(v,a){
   v<-v[order(-v)]
@@ -573,126 +940,8 @@ yield_density<-function(v,a){
 }
 
 
-# Data handling ####
-
-#' return list from dara frame
-#'
-#' @param d3  data frame
-#' @param index characters,a name of index  in data frame columns
-#' @param col vector of characters, data frame column names to include in list created
-#'
-#' @return list
-#' @export
-#'
-#' @examples
-#' dir.<-"../K123_2022/crown_polygon" # dir(dir.)
-#' k1crown<-read_sf(dir.,"polygon_k1_2022")
-#' plot(k1crown)
-#' plot(k1crown %>% select(樹種))
-#' k1crown$geometry[[1]][[1]]
-#' d<-k1crown
-#' st_dimension(d)
-#' d2<-d[!is.na(st_dimension(d)),]
-#' d3<- as.data.frame(st_coordinates(d2))
-#'L<-dataframe2list(d3,index="L2",col=c("X","Y"))
-#' x12 <- range(d3$X) ; y12 <- range(d3$Y)
-#' plot(0,type="n",xlim=x12,ylim=y12)
-#' tmp. <- sapply(L,polygon)
-#'
-#'
-#'
-dataframe2list <- function(d3,index="L2",col=c("X","Y")){
-  L<-c()
-  unq<-unique(d3[,index])
-  for (i in unq){
-    j<-d3[,index]==i
-    L<-c(L,list(d3[j,col]))
-  }
-  names(L)<-index
-  return(L)
-}
 
 
-
-
-#' mtime_stamp
-#'
-#' @param fn vector of file names
-#'
-#' @return vector of mtime stamp of files
-#' @export
-#'
-#' @examples
-#' filename <- dir()
-#' data.frame(filename,mtime=mtime_stamp(filename))
-mtime_stamp <- function(fn){
-  mt <- file.info(fn)$mtime
-  return(gsub("[^0-9]","",mt))
-}
-
-#' All file path in working directory
-#'
-#' @param wd working directory
-#'
-#' @return data frame of full path, time , size of all files in working directory
-#' @export
-#'
-#' @examples
-#'
-#' fs::dir_tree(path =getwd(), recurse = TRUE,type="dir")
-#' fullpath()
-fullpath <- function(wd=getwd()){
-  hd<-getwd()
-  setwd(wd)
-  f<-dir(recursive =TRUE)
-  f.<-sapply(f,function(s)rev(unlist(strsplit(s,"/")))[1],USE.NAMES =FALSE)
-  time = file.mtime(f) ; size=file.size(f)
-  files<-data.frame(path=f,file=f.,time,size)
-  setwd(hd)
-  return(files)
-}
-
-#' return file paths including a keyword
-#'
-#' @param ff
-#' @param keyword
-#'
-#' @return
-#' @export
-#'
-#' @examples
-#' (ff<-fullpath())
-#' file_search(ff,"k123")
-file_search <- function(ff,keyword){
-  (d. <-ff[ grep(keyword,ff$path),])
-  return((d.<-d.[order(d.$path,d.$time,d.$size),]))
-}
-
-#' return data frame of no. and file path  with a keyword
-#'
-#' @param paths vector of file names (full path)
-#' @param text character of keyword
-#'
-#' @return data frame of no. and file path  with a keyword in paths
-#' @export
-#'
-#' @examples
-#'
-#' (f<-dir(pattern="\\.R$",recursive =TRUE) ) #
-#' keyword <- "ForestTools"    # "library\\(sf"
-#' (f. <- files_keyword (f,keyword ))
-#' i<-11 ;  readLines(f[i]); grep(keyword ,readLines(f[i]))
-#' edit(file.info(f.)$file)
-files_keyword <- function(f, keyword="data")
-{
-  dat<-c()
-  for (i in 1:length(f)){
-    l<-grep(keyword,readLines(f[i]))
-    if(length(l)!=0)  dat<-rbind(dat,c(i,f[i]))
-  }
-  dat <- data.frame(no=dat[,1],file=dat[,2])
-  return(dat)
-}
 
 
 

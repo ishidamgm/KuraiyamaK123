@@ -3,20 +3,20 @@
 \docType{data}
 \name{TreeHeight_CR_abc}
 \alias{TreeHeight_CR_abc}
-\title{Parameters of relationship between DBH and tree height (Chapman-Richards)
-calculated from natural forest in Kuaraiayama forest of Gigu university}
+\title{Parameters of relationship between DBH and tree height (Chapman-Richards)}
 \format{
-An object of class \code{data.frame} with 3 rows and 3 columns.
+
+}
+\source{
+from natural forest in Kuaraiayama forest of Gigu university (Sanchikanri Labo)
 }
 \usage{
 TreeHeight_CR_abc
 }
 \description{
-Parameters of relationship between DBH and tree height (Chapman-Richards)
-calculated from natural forest in Kuaraiayama forest of Gigu university
+H=a*(1-exp(-b*DBH))^c + 1.3 (Chapman-Richards)
 }
-\examples{
-TreeHeight_CR_abc
-
+\seealso{
+\link{TreeHeight_CR}
 }
-\keyword{data}
+\keyword{datasets}

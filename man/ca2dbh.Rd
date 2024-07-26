@@ -7,7 +7,10 @@
 ca2dbh(ca)
 }
 \arguments{
-\item{ca}{}
+\item{ca}{vector of crown area}
+}
+\value{
+vector of DBH (diameter at breast height)
 }
 \description{
 estimates DBH from crown area

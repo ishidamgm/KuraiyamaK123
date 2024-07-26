@@ -2,7 +2,7 @@
 % Please edit documentation in R/calculation.R
 \name{yield_density}
 \alias{yield_density}
-\title{Title}
+\title{YN plot}
 \usage{
 yield_density(v, a)
 }
@@ -15,7 +15,7 @@ yield_density(v, a)
 data frame of yn (number of trees ordered with size , yield of cumulative volume)
 }
 \description{
-Title
+YN plot
 }
 \examples{
 #### simple example
@@ -26,12 +26,13 @@ plot(yield_density(v,a))
 #### example of Kuraiyama K123
 
 pn <- 2 # plot number
-d<-subset(K,plt==pn)
-a<-as.numeric(st_area(k123plot[[pn]]))
+d<-subset(k123_field,plot==pn)
+a<-k123_site$area[pn]
 v<-TrunkVolume(d$sp,d$dbh,d$h)
 NY <- yield_density(v,a)
 plot(NY,
  xlab="N",
- ylab="Cummulative trunk volume(m^3/ha)")
+ ylab="Cummulative trunk volume(m^3/ha)",
+ main=paste("Site :",pn))
 
 }

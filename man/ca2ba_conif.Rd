@@ -7,7 +7,10 @@
 ca2ba_conif(ca)
 }
 \arguments{
-\item{ca}{}
+\item{ca}{vector of crown area  (conifer)}
+}
+\value{
+vector of basal area  (conifer)
 }
 \description{
 estimates basal area from crown area  (conifer)

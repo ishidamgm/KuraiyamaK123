@@ -9,6 +9,9 @@ ca2dbh_conif(ca)
 \arguments{
 \item{ca}{}
 }
+\value{
+DBH (conifer)
+}
 \description{
 estimates DBH from crown area (conifer)
 }

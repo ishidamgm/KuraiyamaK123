@@ -2,7 +2,7 @@
 % Please edit documentation in R/calculation.R
 \name{TrunkVolume_cah}
 \alias{TrunkVolume_cah}
-\title{This calculates tree trun volume from crown area and tree height}
+\title{This calculates tree trunk volume from crown area and tree height}
 \usage{
 TrunkVolume_cah(ca, h, abc = c(4.147e-05, 0.3017, 2.958))
 }

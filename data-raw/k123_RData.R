@@ -1,49 +1,22 @@
 # k123_RData.R
-#C:\Users\ishid\Dropbox\00D\00\kuraiyama\K123_2022\
-# KuraiyamaK123_Qgis.qgz
-
+library(sf)
 # rm(list=ls())
 
-# getwd()
-# setwd("../K123_2022")
-# library(sf)
-#  dir()
+# data directory
+gis_dir<- "../works/qgis"
+dir(gis_dir)
+# KuraiyamaK123_Qgis_2023.qgz   : QGis project file
 
+# k123_site ####
+code <- paste0("k",1:3)
+area <- as.numeric(st_area(k123plot[[pn]]))
+area <- sapply(k123plot,st_area)
+(k123_site <- data.frame(code,area))
+# save(k123_site,file="./data/k123_site.RData")
 
+# k123_area_vector ####
 
-# k123_RData ####
-#' return list of  simplified sf object from shape file of every trees points data
-#'
-#' @param d  simple future (sf) object forest stund
-#' @param lbl column name of tree labels
-#' @param sp  column name of tree species
-#' @param dbh column name of diameter at breast height
-#' @param h   column name of tree height
-#' @param v   column name of vital index
-#'
-#' @return   simple future simplified
-#' @export
-#'
-#' @examples
-#' #setwd("../K123_2022")
-#'
-#' dir.<-"./tree-point"
-#' dir(dir.)
-#' k1<-st_read(dir.,"k1_2022")
-#' k2<-st_read(dir.,"k2_2022")
-#' k3<-st_read(dir.,"k3_2022")
-#' names(k1) ; names(k2) ; names(k3) ;
-#' k123 <- list(k1=k123_RData(k1),k2=k123_RData(k2),k3=k123_RData(k3))
-#' plot(k123$k1)
-#' plot(k123$k2)
-#' plot(k123$k3)
-#' #save(k123,file="K123.RData")
-k123_RData <- function(d,lbl="label",sp="sp",dbh="dbh",h="h",v="vital"){
-  return(d[,c(lbl,sp,dbh,h,v)])
-}
-
-
-#' return list of  simplified sf object from shape file of plot outline polygon data
+#' return list of  simplified sf object from shape file of plot area polygon
 #'
 #' @param k1crown
 #' @param k2crown
@@ -53,20 +26,163 @@ k123_RData <- function(d,lbl="label",sp="sp",dbh="dbh",h="h",v="vital"){
 #' @export
 #'
 #' @examples
-#' dir.<-"./clown_plot_outline_polygon" # dir(dir.)
-#' k1plot<-st_read(dir.,"k1_crown_plot_outlinepolygon")
-#' k2plot<-st_read(dir.,"k2_crown_plot_outlinepolygon")
-#'k3plot<-st_read(dir.,"k3_crown_plot_outlinepolygon")
-#' #k123plot <- list(k1=st_geometry(k1plot),k2=st_geometry(k2plot),k3=st_geometry(k3plot))
-#' par(mfrow=c(1,3));sapply(k123plot,plot)
-#' sapply(k123plot,st_area)
-#'  #save(k123plot,file="K123plot.RData")
-k123plot_RData <- function(k1crown,k2crown,k3crown){
+#' dir.<- "../works/qgis"
+#' k1crown<-st_read(dir.,"k1_crown_plot_outlinepolygon")
+#' k2crown<-st_read(dir.,"k2_crown_plot_outlinepolygon")
+#' k3crown<-st_read(dir.,"k3_crown_plot_outlinepolygon")
+#' k123_area_vector <- k123_area_vector_RData(k1crown,k2crown,k3crown)
+#' par(mfrow=c(1,3));sapply(k123_area_vector,plot)
+#' sapply(k123_area_vector,st_area)
+#'  #save(k123_area_vector,file="./data/k123_area_vector.RData")
+k123_area_vector_RData <- function(k1crown,k2crown,k3crown){
   k123plot <- list(k1=st_geometry(k1plot),k2=st_geometry(k2plot),k3=st_geometry(k3plot))
   return(k123plot)
 }
 
-# k123ttop_RData ####
+#' list of  simplified sf object from shape file of plot area polygon
+#' of  K123 natural forest stand in Kuaraiayama forest of Gigu university
+#' @name k123_field
+#' @docType data
+#' @keywords data
+#' @examples
+#' par(mfrow=c(1,3));sapply(k123_area_vector,plot)
+#' sapply(k123_area_vector,st_area)
+#'
+"k123_area_vector"
+
+
+# k123_field ####
+gis_dir<- "../works/qgis"
+k123_field <- st_read(gis_dir,"k123_03")
+names(k123_field)
+plot(k123_field["dbh"])
+#save(k123_field,file="./data/K123_field.RData")
+
+
+#' data:k123_field
+#' Field forest stand data for tree label, species, DBH, Height,vital,etc.
+#' for  K123 natural forest stand in Kuaraiayama forest of Gigu university
+#'
+#' @name k123_field
+#' @docType data
+#' @keywords data
+#' @examples
+#' names(k123_field)
+#' plot(k123_field["dbh"])
+
+"k123_field"
+
+
+
+
+# k123_lider ####
+
+gis_dir<- "../works/qgis"
+k123_lidar <- st_read(gis_dir,"k123_ttops")
+names(k123_lidar)
+plot(k123_lidar["height"])
+#save(k123_lidar,file="./data/K123_lidar.RData")
+
+#' data:k123_lidar (sf class)
+#' Forest stand data (ttops) calculated with airial LiDar (DSM,DTM,DCHM) and ForestTools
+#' for  K123 natural forest stand in Kuaraiayama forest of Gigu university
+#' "plot"      "treeID"    "lbl"       "height"    "ca"        "v"         "winRadius" "geometry"
+#'
+#' @name k123_field
+#' @docType data
+#' @keywords data
+#' @examples
+#' names(k123_lidar)
+#' plot(k123_lidar["height"])
+
+"k123_lidar"
+
+# k123_drone ####
+gis_dir<- "../works/qgis"
+k123_drone <- st_read(gis_dir,"k123_crown")
+names(k123_drone)
+plot(k123_drone["h"])
+#save(k123_drone,file="./data/K123_drone.RData")
+
+#' data:k123_drone (sf class)
+#' Forest stand data distinguished with drone orthophoto
+#' for  K123 natural forest stand in Kuaraiayama forest of Gigu university
+#' "id"       "a"        "h"        "sp"       "lbl"      "dbh"      "plot"     "geometry"
+#'
+#' @name k123_field
+#' @docType data
+#' @keywords data
+#' @examples
+#' names(k123_drone)
+#' plot(k123_drone["h"])
+
+"k123_drone"
+
+
+
+
+
+
+
+
+
+
+# old version >>>>>> ####
+if(0){
+  # k123_field_RData ####
+
+  #' return list of  simplified sf object from shape file of every trees points data
+  #'
+  #' @param d  simple future (sf) object forest stund
+  #' @param lbl column name of tree labels
+  #' @param sp  column name of tree species
+  #' @param dbh column name of diameter at breast height
+  #' @param h   column name of tree height
+  #' @param v   column name of vital index
+  #'
+  #' @return   simple future simplified
+  #' @export
+  #'
+  #' @examples
+  #' gis_dir<- "../works/qgis"
+  #' k1<-st_read(gis_dir,"k1_2023_spr")
+  #' k2<-st_read(gis_dir,"k2_2023_spr")
+  #' k3<-st_read(gis_dir,"k3_2023_spr")
+  #' names(k1) ; names(k2) ; names(k3) ;
+  #' k123 <- list(k1=k123_RData(k1),k2=k123_RData(k2),k3=k123_RData(k3))
+  #' plot(k123$k1)
+  #' plot(k123$k2)
+  #' plot(k123$k3)
+  #' #save(k123,file="./data/K123_field.RData")
+  k123_RData <- function(d,lbl="label",sp="sp",dbh="dbh",h="h",v="vital"){
+    return(d[,c(lbl,sp,dbh,h,v)])
+  }
+
+  k123crown_RData <- function(d=k1crown,lbl="label",sp="sp",a="Area",h="Height"){
+    d<-d[,c(lbl,sp,a,h)]
+    names(d)[1:4]<-c("label","species","area","height")
+    return(d)
+  }
+
+
+  #' data:k123_field
+  #' Field forest stand data for tree label, species, DBH, Height,vital
+  #' for  K123 natural forest stand in Kuaraiayama forest of Gigu university
+  #'
+  #' @name k123_field
+  #' @docType data
+  #' @keywords data
+  #' @examples
+  #' plot(k123$k1)
+  #' plot(k123$k2)
+  #' plot(k123$k3)
+  #'
+  "k123_field"
+
+
+
+}
+
 #' return sf object from data frame including x,y, coordinates
 #'
 #' @param t. data frame including x,y, coordinates
@@ -78,6 +194,7 @@ k123plot_RData <- function(k1crown,k2crown,k3crown){
 #' @export
 #'
 #' @examples
+#'
 #' dir.<-"./ttop/" # dir(dir.)
 #' k1ttop<-read.csv(paste0(dir.,"k1_ttop.csv"))
 #' k2ttop<-read.csv(paste0(dir.,"k2_ttop.csv"))
@@ -98,11 +215,7 @@ datafarame2sf <- function(t.=k2ttop,xc="tx",yc="ty",crs=6675){
   df <- st_sf(t., geometry = geometry,crs=crs)
   for(i in 1:nrows)st_geometry(df)[i]<-st_point(c(t.[i,xc],t.[i,yc]))
   return(df)
-  }
-
-
-# k123clown.RData ####
-
+}
 
 #' Title
 #'
@@ -132,20 +245,12 @@ datafarame2sf <- function(t.=k2ttop,xc="tx",yc="ty",crs=6675){
 #' plot(K123crown[[i]])
 #' }
 #' # save(k123crown,file="k123crown.Rdata")
+#'
 
 
 
-k123crown_RData <- function(d=k1crown,lbl="label",sp="sp",a="Area",h="Height"){
-  d<-d[,c(lbl,sp,a,h)]
-  names(d)[1:4]<-c("label","species","area","height")
-  return(d)
-}
-
-
-
-
-# k123_RData_arrange ####
-
+# k123_species ####
+k123<-data.frame(k123_field)
 tn<-sapply(k123,nrow)
 K <- rbind(k123[[1]],k123[[2]],k123[[3]])
 plt<-rep(1:3,tn[1:3])
@@ -177,15 +282,6 @@ K123_species<-data.frame(K123_species,ID, Family, Genus,ScienceName)
 
 # save(K,file="../data/K.RData")
 
-
-# k123_site ####
-code <- paste0("k",1:3)
-area <- as.numeric(st_area(k123plot[[pn]]))
-area <- sapply(k123plot,st_area)
-(k123_site <- data.frame(code,area))
-# save(k123_site,file="./data/k123_site.RData")
-
-
 ###
 names(K)
 crown_drone<- rep(0,nrow(K))
@@ -195,4 +291,8 @@ for(ii in 1:3){ #ii<-1
   crown_drone[i]<-k123crown[[ii]]$area
   h_drone[i]<-k123crown[[ii]]$height
 }
+
+
+
+# <<<<<< old version  ####
 

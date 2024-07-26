@@ -7,7 +7,10 @@
 ca2ba(ca)
 }
 \arguments{
-\item{ca}{}
+\item{ca}{vector of crown area}
+}
+\value{
+vector of basal area
 }
 \description{
 estimates basal area from crown area  (all tree spcies)

@@ -7,7 +7,10 @@
 ba2dbh(ba)
 }
 \arguments{
-\item{ba}{}
+\item{ba}{vector of basal area}
+}
+\value{
+vector of DBH
 }
 \description{
 Calculate DBH from Basal Area
